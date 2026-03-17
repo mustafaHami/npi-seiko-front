@@ -28,7 +28,7 @@ FROM alpine:3.19.1 AS lighttpd
 RUN apk add --no-cache lighttpd
 
 # Copy the production-ready Angular app to the Lighttpd webserver's root directory
-COPY --from=builder /app/dist/cost-seiko-front/browser /var/www/localhost/htdocs/
+COPY --from=builder /app/dist/npi-seiko-front/browser /var/www/localhost/htdocs/
 # Copy the lighttpd config (you need to create this file)
 COPY /lighttpd.conf /etc/lighttpd/lighttpd.conf
 

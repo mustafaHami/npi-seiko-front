@@ -4,8 +4,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Angular 21 application for cost management (Seiko Cost Front). Uses standalone components, PrimeNG UI library, and
-OpenAPI-generated API clients. Role-based access control with ADMINISTRATOR and SUPER_ADMINISTRATOR roles.
+Angular 21 application for **NPI (New Product Introduction) workflow management** (Seiko NPI Front). This app is the
+step after quotation — once a quotation is approved, an NPI order is created and tracked through its full lifecycle.
+
+### Business Context
+
+The NPI workflow covers the full journey from order creation to customer approval:
+
+1. **Order creation** — PO number, work order ID, part number, quantity, target delivery date, customer, product
+2. **Process tracking** — Each NPI order has a `ProcessInstance` with multiple `ProcessInstanceLine` steps (e.g.
+   material purchasing, manufacturing, testing, shipping, validation)
+3. **Stage status management** — Each process line transitions through: `NOT_STARTED → IN_PROGRESS → COMPLETED`
+   (or `ABORTED`)
+4. **File management** — Documents can be attached to NPI orders and to individual process lines (e.g. validation docs)
+5. **Shipping & customer approval** — Shipping date and customer approval/rejection are recorded on the order
+6. **Archiving & aborting** — Orders can be archived or aborted (freezes all related data)
+
+### Dashboards
+
+- Open NPI projects count and average lead time
+- NPI order count by stage/status (`DashboardNpiOrderCountByStageStatus`)
+
+### NPI Order Statuses
+
+`READY_TO_PRODUCTION` → `STARTED` → `COMPLETED` | `ABORTED`
+
+### Roles
+
+`ADMINISTRATOR`, `SUPER_ADMINISTRATOR`, `PROJECT_MANAGER`, `ENGINEERING`, `PROCUREMENT`, `PLANNING`, `MANAGEMENT`
+
+### Tech Stack
+
+Uses standalone components, PrimeNG UI library, and OpenAPI-generated API clients (from `swagger-npi-seiko.yaml`).
 
 ## MANDATORY ::ng-deep
 
@@ -133,7 +163,7 @@ npm run build        # Production build
 npm test             # Run tests
 
 # API client generation
-npm run openapi-ts   # Regenerate from swagger-cost-seiko.yaml
+npm run openapi-ts   # Regenerate from swagger-npi-seiko.yaml
 ```
 
 ## Key Files

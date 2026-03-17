@@ -4,7 +4,7 @@
 
 ```bash
 npm install
-npm run openapi-ts  # Generate API client from swagger-cost-seiko.yaml
+npm run openapi-ts  # Generate API client from swagger-npi-seiko.yaml
 ```
 
 ## Development
@@ -19,7 +19,7 @@ npm test             # Run Karma tests
 ## API Client Generation
 
 ```bash
-npm run openapi-ts   # Regenerate API client from swagger-cost-seiko.yaml
+npm run openapi-ts   # Regenerate API client from swagger-npi-seiko.yaml
 ```
 
 ## Build Configurations
@@ -34,7 +34,7 @@ npm run openapi-ts   # Regenerate API client from swagger-cost-seiko.yaml
 ### Building Image
 
 ```bash
-docker build -t cost-seiko-front-image:1.0.0 -f ./Dockerfile .
+docker build -t npi-seiko-front-image:1.0.0 -f ./Dockerfile .
 ```
 
 **Note:** Dockerfile includes `npm run openapi-ts` step, so API client is generated automatically during build.
@@ -42,9 +42,9 @@ docker build -t cost-seiko-front-image:1.0.0 -f ./Dockerfile .
 ### Deployment Process
 
 1. Build Docker image locally
-2. Export: `docker save -o cost-seiko-front-image.tar cost-seiko-front-image:1.0.0`
-3. Transfer to server: `scp cost-seiko-front-image.tar USERNAME@IPADDRESS:/tmp`
-4. Load on server: `docker load -i /tmp/cost-seiko-front-image.tar`
+2. Export: `docker save -o npi-seiko-front-image.tar npi-seiko-front-image:1.0.0`
+3. Transfer to server: `scp npi-seiko-front-image.tar USERNAME@IPADDRESS:/tmp`
+4. Load on server: `docker load -i /tmp/npi-seiko-front-image.tar`
 5. Restart containers: `docker compose -f /opt/work/docker-compose.yaml restart web`
 
 ## Application Initialization Flow

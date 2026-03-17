@@ -1,0 +1,96 @@
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="card-header">
+      <app-custom-title [title]="title"></app-custom-title>
+    </div>
+  </ng-template>
+  <p-table
+    (onLazyLoad)="loadData($event)"
+    [lazy]="true"
+    [loading]="loading"
+    [paginator]="true"
+    [resizableColumns]="true"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [rows]="maxRowDefault"
+    [totalRecords]="totalRecords"
+    [value]="npiOrders()"
+    class="app-table"
+    dataKey="uid"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-caption">
+        <div class="caption-action-button">
+          <app-search-input
+            (eventSearchValidate)="activateSearch($event)"
+          ></app-search-input>
+        </div>
+        <div class="caption-action-button">
+          <p-button
+            (click)="createNpiOrder()"
+            [icon]="Icons.PLUS"
+            [raised]="true"
+            label="NPI Order"
+          ></p-button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ TableColsTitle.PURCHASE_ORDER_NUMBER }}</th>
+        <th>{{ TableColsTitle.WORK_ORDER_ID }}</th>
+        <th>{{ TableColsTitle.PART_NUMBER }}</th>
+        <th>{{ TableColsTitle.QUANTITY }}</th>
+        <th>{{ TableColsTitle.CUSTOMER_NAME }}</th>
+        <th>{{ TableColsTitle.TARGET_DELIVERY_DATE }}</th>
+        <th>{{ TableColsTitle.STATUS }}</th>
+        <th>{{ TableColsTitle.CURRENT_PROCESS_STEP }}</th>
+        <th class="col-actions">{{ TableColsTitle.ACTIONS }}</th>
+      </tr>
+    </ng-template>
+    <ng-template let-npiOrder pTemplate="body">
+      <tr>
+        <td class="text-bold">{{ npiOrder.purchaseOrderNumber }}</td>
+        <td>{{ npiOrder.workOrderId }}</td>
+        <td>{{ npiOrder.partNumber }}</td>
+        <td>{{ npiOrder.quantity }}</td>
+        <td>{{ npiOrder.customerName }}</td>
+        <td>{{ npiOrder.targetDeliveryDate }}</td>
+        <td>
+          @if (npiOrder.status) {
+            <p-tag
+              [severity]="npiOrder.status | npiOrderStatus: 'severity'"
+              [value]="npiOrder.status | npiOrderStatus"
+            />
+          }
+        </td>
+        <td>{{ npiOrder.currentProcessStepName }}</td>
+        <td class="col-actions">
+          <p-button
+            (click)="editNpiOrder(npiOrder)"
+            [icon]="Icons.PENCIL"
+            [text]="true"
+            pTooltip="Edit"
+            tooltipPosition="top"
+          ></p-button>
+          @if (canAbort(npiOrder)) {
+            <p-button
+              (onClick)="abortNpiOrder(npiOrder)"
+              [delay]="2000"
+              [icon]="Icons.BAN"
+              [text]="true"
+              appNoDoubleClick
+              pTooltip="Abort"
+              severity="danger"
+              tooltipPosition="top"
+            ></p-button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr class="p-datatable-emptymessage">
+        <td colspan="9">No NPI orders found</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

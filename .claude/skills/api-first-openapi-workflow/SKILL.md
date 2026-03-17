@@ -2,9 +2,9 @@
 
 When implementing a new view/feature that requires backend data:
 
-1. **Check the OpenAPI spec first** (`swagger-cost-seiko.yaml`) to confirm the endpoint already exists.
+1. **Check the OpenAPI spec first** (`swagger-npi-seiko.yaml`) to confirm the endpoint already exists.
 
-2. If the endpoint **does not exist**, you MUST design and add it to `swagger-cost-seiko.yaml`, reusing existing project
+2. If the endpoint **does not exist**, you MUST design and add it to `swagger-npi-seiko.yaml`, reusing existing project
    patterns (see the User APIs as the reference).
 
 ### Search endpoints (MANDATORY pattern)

@@ -13,7 +13,7 @@
 - `npm run openapi-ts`: regenerate API types/clients from the OpenAPI config. Run this before local dev or release builds when the API spec changes.
 - `npm start`: run Angular dev server (`http://localhost:4205`).
 - `npm run debug`: run dev server with explicit `development` configuration.
-- `npm run build`: production build to `dist/cost-seiko-front`.
+- `npm run build`: production build to `dist/npi-seiko-front`.
 - `npm test`: run unit tests with Karma/Jasmine.
 
 ## Coding Style & Naming Conventions

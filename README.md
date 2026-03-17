@@ -12,17 +12,17 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 DO NOT FORGET TO PLAY `openapi-ts` first!!! (not yet in Dockerfile)
 
 1. On Windows, start `Docker Engine` first
-2. Run `docker build -t cost-seiko-front-image:1.0.0 -f ./Dockerfile .` to build the image
+2. Run `docker build -t npi-seiko-front-image:1.0.0 -f ./Dockerfile .` to build the image
 3. upload the image to server (check your own tag and server IP address!):
 
-- `docker save -o cost-seiko-front-image.tar cost-seiko-front-image:1.0.0`
-- `scp cost-seiko-front-image.tar USERNAME@IPADDRESS:/tmp`
+- `docker save -o npi-seiko-front-image.tar npi-seiko-front-image:1.0.0`
+- `scp npi-seiko-front-image.tar USERNAME@IPADDRESS:/tmp`
 
 4. load the image in the docker of the server
 
 - `docker compose -f /opt/work/docker-compose.yaml down`
-- `docker rmi cost-seiko-front-image:1.0.0`
-- `docker load -i /tmp/cost-seiko-front-image.tar`
+- `docker rmi npi-seiko-front-image:1.0.0`
+- `docker load -i /tmp/npi-seiko-front-image.tar`
 - `docker compose -f /opt/work/docker-compose.yaml up -d`
 
 - `docker compose -f /opt/work/docker-compose.yaml restart web`

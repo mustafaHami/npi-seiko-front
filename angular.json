@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "cost-seiko-front": {
+    "npi-seiko-front": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/cost-seiko-front",
+            "outputPath": "dist/npi-seiko-front",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -83,11 +83,11 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "cost-seiko-front:build:production",
+              "buildTarget": "npi-seiko-front:build:production",
               "port": 4500
             },
             "development": {
-              "buildTarget": "cost-seiko-front:build:development",
+              "buildTarget": "npi-seiko-front:build:development",
               "port": 4205
             }
           },
@@ -96,7 +96,7 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "cost-seiko-front:build"
+            "buildTarget": "npi-seiko-front:build"
           }
         },
         "test": {

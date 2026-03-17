@@ -137,7 +137,7 @@ npm run build        # Production build
 npm test             # Run tests
 
 # API client generation
-npm run openapi-ts   # Regenerate from swagger-cost-seiko.yaml
+npm run openapi-ts   # Regenerate from swagger-npi-seiko.yaml
 ```
 
 ## Key Files

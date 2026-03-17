@@ -16,51 +16,17 @@ const ROUTE_ROLES: Partial<Record<RouteId, UserRole[]>> = {
   // Admin sub-route guards (applied in admin.routes.ts via canActivate).
   // Omitting an entry = accessible to anyone who passed the parent guard.
   [RouteId.ADMIN_USERS]: [UserRole.ADMINISTRATOR],
-  [RouteId.ADMIN_CUSTOMERS]: [UserRole.ADMINISTRATOR],
-  [RouteId.ADMIN_PRODUCT_NAMES]: [UserRole.ADMINISTRATOR],
-  [RouteId.ADMIN_CURRENCIES]: [UserRole.ADMINISTRATOR],
-  [RouteId.ADMIN_PROCESSES]: [UserRole.ADMINISTRATOR],
-  [RouteId.ADMIN_SHIPMENT_METHODS]: [UserRole.ADMINISTRATOR],
-  [RouteId.ADMIN_GLOBAL_CONFIG]: [UserRole.ADMINISTRATOR],
-  // ADMIN_MATERIAL_CATEGORIES, ADMIN_UNITS, ADMIN_SUPPLIERS_MANUFACTURERS:
-  // no entry = accessible to all authenticated users who passed the parent guard.
-  [RouteId.BOM_CONFIGURATIONS]: [
-    UserRole.PROJECT_MANAGER,
-    UserRole.ENGINEERING,
-    UserRole.ADMINISTRATOR,
-  ],
-  [RouteId.COST_REQUEST]: [UserRole.PROJECT_MANAGER],
-  [RouteId.QUOTATION]: [UserRole.PROJECT_MANAGER],
-  [RouteId.ENGINEERING]: [UserRole.ENGINEERING],
-
-  // PROCUREMENT: list every role that can enter the section.
-  // Sub-routes below further restrict access per page.
-  // Example: ENGINEERING can only reach PROCUREMENT_COST_REQUEST_LINE.
-  [RouteId.PROCUREMENT]: [UserRole.PROCUREMENT /*, UserRole.ENGINEERING */],
-
-  // Sub-route guards (applied in procurement.routes.ts via canActivate).
-  // Omitting an entry = accessible to anyone who passed the parent guard.
-  // [RouteId.PROCUREMENT_MATERIAL]: [UserRole.PROJECT_MANAGER],
-  // [RouteId.PROCUREMENT_TOOLING]: [UserRole.PROJECT_MANAGER],
-  // [RouteId.PROCUREMENT_COST_REQUEST_LINE]: [UserRole.PROJECT_MANAGER /*, UserRole.ENGINEERING */],
-
-  [RouteId.APPROVAL]: [UserRole.MANAGEMENT],
   [RouteId.DASHBOARD]: [
     UserRole.PROJECT_MANAGER,
     UserRole.ENGINEERING,
     UserRole.MANAGEMENT,
     UserRole.PROCUREMENT,
   ],
-  [RouteId.PLANNING]: [UserRole.PLANNING],
-  [RouteId.INDICATORS]: [
-    UserRole.ENGINEERING,
-    UserRole.MANAGEMENT,
+  [RouteId.NPI_ORDERS]: [
     UserRole.PROJECT_MANAGER,
+    UserRole.ENGINEERING,
     UserRole.PROCUREMENT,
-  ],
-  [RouteId.REPORT]: [
-    UserRole.PROJECT_MANAGER,
-    UserRole.ENGINEERING,
+    UserRole.PLANNING,
     UserRole.MANAGEMENT,
   ],
 };
@@ -95,14 +61,7 @@ export class AccessService {
    */
   public static getHomeRouteId(role: UserRole): RouteId {
     if (this.isSuperAdmin(role) || this.isAdministrator(role))
-      return RouteId.COST_REQUEST;
-    const homeRoutes: Partial<Record<UserRole, RouteId>> = {
-      [UserRole.PROJECT_MANAGER]: RouteId.COST_REQUEST,
-      [UserRole.ENGINEERING]: RouteId.ENGINEERING,
-      [UserRole.MANAGEMENT]: RouteId.APPROVAL,
-      [UserRole.PROCUREMENT]: RouteId.PROCUREMENT,
-      [UserRole.PLANNING]: RouteId.PLANNING,
-    };
-    return homeRoutes[role] ?? RouteId.COST_REQUEST;
+      return RouteId.NPI_ORDERS;
+    return RouteId.NPI_ORDERS;
   }
 }

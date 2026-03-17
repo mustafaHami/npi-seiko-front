@@ -1,5 +1,5 @@
 {
-  "name": "cost-seiko-front",
+  "name": "npi-seiko-front",
   "version": "1.0.12",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "openapi-ts": "openapi-ts --file openapi-config/openapi-ts.cost-seiko.config.ts"
+    "openapi-ts": "openapi-ts --file openapi-config/openapi-ts.npi-seiko.config.ts"
   },
   "private": true,
   "dependencies": {

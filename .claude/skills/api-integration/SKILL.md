@@ -2,8 +2,8 @@
 
 ## OpenAPI Configuration
 
-- Config: `openapi-config/openapi-ts.cost-seiko.config.ts`
-- Swagger spec: `swagger-cost-seiko.yaml`
+- Config: `openapi-config/openapi-ts.npi-seiko.config.ts`
+- Swagger spec: `swagger-npi-seiko.yaml`
 - Generated client: `src/client/costSeiko/`
     - `sdk.gen.ts` - Service classes
     - `types.gen.ts` - TypeScript interfaces and enums
@@ -18,7 +18,7 @@
 
 When backend API changes:
 
-1. Update `swagger-cost-seiko.yaml` with new OpenAPI spec
+1. Update `swagger-npi-seiko.yaml` with new OpenAPI spec
 2. Run `npm run openapi-ts`
 3. Generated client appears in `src/client/costSeiko/`
 4. Update repositories in `src/app/repositories/` as needed

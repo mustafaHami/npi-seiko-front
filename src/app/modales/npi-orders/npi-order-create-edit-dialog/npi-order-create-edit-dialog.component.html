@@ -1,0 +1,74 @@
+<p-card class="container dialog">
+  <form [formGroup]="npiOrderForm">
+    <div class="p-fields-row">
+      <div class="p-field">
+        <app-input-container
+          [formControlName]="NpiOrderFormField.PURCHASE_ORDER_NUMBER"
+          label="PO Number"
+        ></app-input-container>
+      </div>
+      <div class="p-field">
+        <app-input-container
+          [formControlName]="NpiOrderFormField.WORK_ORDER_ID"
+          label="Work Order ID"
+        ></app-input-container>
+      </div>
+    </div>
+    <div class="p-fields-row">
+      <div class="p-field">
+        <app-input-container
+          [formControlName]="NpiOrderFormField.PART_NUMBER"
+          label="Part Number"
+        ></app-input-container>
+      </div>
+      <div class="p-field">
+        <app-input-container
+          [formControlName]="NpiOrderFormField.QUANTITY"
+          label="Quantity"
+          type="number"
+        ></app-input-container>
+      </div>
+    </div>
+    <div class="p-fields-row">
+      <div class="p-field">
+        <app-input-container
+          [formControlName]="NpiOrderFormField.CUSTOMER_NAME"
+          label="Customer Name"
+        ></app-input-container>
+      </div>
+      <div class="p-field">
+        <app-input-container
+          [formControlName]="NpiOrderFormField.PRODUCT_NAME"
+          label="Product Name"
+        ></app-input-container>
+      </div>
+    </div>
+    <div class="p-fields-row">
+      <div class="p-field">
+        <label>Order Date</label>
+        <p-datepicker
+          [formControlName]="NpiOrderFormField.ORDER_DATE"
+          appendTo="body"
+          dateFormat="yy-mm-dd"
+          placeholder="Select order date"
+        ></p-datepicker>
+      </div>
+      <div class="p-field">
+        <app-input-container
+          [formControlName]="NpiOrderFormField.TARGET_DELIVERY_DATE"
+          label="Target Delivery Date"
+          placeholder="e.g. 2025-12-31"
+        ></app-input-container>
+      </div>
+    </div>
+    <p-button
+      (click)="submit()"
+      [disabled]="npiOrderForm.invalid"
+      [icon]="Icons.CHECK"
+      [label]="editMode() ? 'Update' : 'Create'"
+      class="modal-btn"
+      severity="success"
+      type="submit"
+    ></p-button>
+  </form>
+</p-card>
