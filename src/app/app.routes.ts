@@ -46,6 +46,14 @@ export const routes: Routes = [
       () => inject(RoleGuard).canActivate(RouteId.NPI_ORDERS),
     ],
   },
+  {
+    path: RoutingService.getRouteEnv(RouteId.DASHBOARD).path,
+    loadChildren: () =>
+      import("./pages/dashboard/dashboard.routes").then(
+        (m) => m.dashboardRoutes,
+      ),
+    canActivate: [() => inject(AuthGuardService).canActivate()],
+  },
   // WILDCARD: MUST BE LAST ROUTE IN THE LIST
   {
     path: "**",

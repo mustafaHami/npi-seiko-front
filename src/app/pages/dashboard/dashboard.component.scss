@@ -1,0 +1,150 @@
+// ==========================================================================
+// Dashboard Shell
+// ==========================================================================
+
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .dashboard-refresh-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .dashboard-last-refresh {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    opacity: 0.7;
+
+    i {
+      font-size: 0.7rem;
+    }
+  }
+
+  .dashboard-refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.875rem;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    color: var(--text-color-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+
+    i {
+      font-size: 0.8rem;
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--surface-hover);
+      color: var(--text-color);
+      border-color: var(--primary-color);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.dashboard-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--text-color);
+  letter-spacing: -0.01em;
+
+  i {
+    color: var(--main-color);
+    font-size: 1.25rem;
+  }
+}
+
+.export-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// ── Loading ─────────────────────────────────────────────────────────────────
+
+.dashboard-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--text-color-secondary);
+  font-size: 0.9375rem;
+
+  i {
+    font-size: 1.5rem;
+    color: var(--main-color);
+  }
+}
+
+// ── Modules grid ─────────────────────────────────────────────────────────────
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.875rem;
+  margin-top: 0.875rem;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+
+    .panel--orders {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.module-panel {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.125rem;
+  animation: panelIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  &.panel--orders {
+    animation-delay: 0.05s;
+  }
+
+  &.panel--pie {
+    animation-delay: 0.1s;
+  }
+
+  &.panel--bar {
+    animation-delay: 0.15s;
+  }
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

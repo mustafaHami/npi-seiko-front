@@ -1,0 +1,47 @@
+<div class="panel-header">
+  <i [class]="Icons.CHART_BAR"></i>
+  <span>Orders at Risk</span>
+</div>
+
+@if (orders().length === 0) {
+  <div class="empty-state">
+    <i [class]="Icons.CHECK"></i>
+    <p>All orders on track</p>
+  </div>
+} @else {
+  <div class="orders-table-wrap">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>PO Number</th>
+          <th>Part</th>
+          <th>Target Date</th>
+          <th>Planned Date</th>
+          <th>Delay</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of orders(); track order.uid) {
+          <tr>
+            <td class="col-po">
+              <span class="po-badge">{{ order.purchaseOrderNumber ?? '—' }}</span>
+            </td>
+            <td class="col-part">{{ order.partNumber ?? '—' }}</td>
+            <td class="col-date">{{ order.targetDeliveryDate | date: 'dd MMM yy' }}</td>
+            <td class="col-date">{{ order.plannedDeliveryDate | date: 'dd MMM yy' }}</td>
+            <td class="col-delay">
+              @if (order.delayInDays != null) {
+                <p-tag
+                  [severity]="delaySeverity(order.delayInDays)"
+                  [value]="(order.delayInDays > 0 ? '+' : '') + order.delayInDays + 'd'"
+                />
+              } @else {
+                <span class="no-delay">—</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

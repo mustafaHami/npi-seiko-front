@@ -1,0 +1,17 @@
+<div class="panel-header">
+  <i [class]="Icons.CHART_PIE"></i>
+  <span>NPI by Status</span>
+</div>
+
+@if (data().length === 0) {
+  <div class="empty-state">
+    <i [class]="Icons.CHART_PIE"></i>
+    <p>No data available</p>
+  </div>
+} @else {
+  <div
+    echarts
+    [options]="chartOptions()"
+    class="status-chart"
+  ></div>
+}

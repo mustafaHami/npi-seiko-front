@@ -1,0 +1,28 @@
+<div class="kpis-row">
+  @for (group of groups(); track group.title; let gi = $index) {
+    <div
+      class="kpi-primary-block kpi-primary-block--{{ group.theme }}"
+      [style.animation-delay]="gi * 80 + 'ms'"
+    >
+      <div class="kpi-primary-item">
+        <span class="kpi-primary-value">{{ group.count }}</span>
+        <span class="kpi-primary-name">{{ group.countLabel }}</span>
+        <div class="kpi-primary-lead">
+          <span class="kpi-lead-value">{{ group.leadTime }}</span>
+          <span class="kpi-lead-unit">days avg. lead time</span>
+        </div>
+      </div>
+      <div class="kpi-primary-label">{{ group.title }}</div>
+    </div>
+  }
+
+  @for (kpi of standaloneKpis(); track kpi.label; let i = $index) {
+    <div
+      class="kpi-secondary-block kpi-secondary-block--{{ kpi.theme }}"
+      [style.animation-delay]="(groups().length + i) * 80 + 'ms'"
+    >
+      <span class="kpi-secondary-value">{{ kpi.value }}</span>
+      <span class="kpi-secondary-name">{{ kpi.label }}</span>
+    </div>
+  }
+</div>

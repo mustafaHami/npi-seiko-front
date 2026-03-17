@@ -1,0 +1,17 @@
+<div class="panel-header">
+  <i [class]="Icons.CHART_BAR"></i>
+  <span>Process Stage Progress</span>
+</div>
+
+@if (data().length === 0) {
+  <div class="empty-state">
+    <i [class]="Icons.CHART_BAR"></i>
+    <p>No data available</p>
+  </div>
+} @else {
+  <div
+    echarts
+    [options]="chartOptions()"
+    class="stage-chart"
+  ></div>
+}

@@ -1,0 +1,84 @@
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="card-header">
+      <app-custom-title [title]="title"></app-custom-title>
+      <div class="dashboard-header">
+        <div class="dashboard-refresh-group">
+          <div class="export-actions">
+            <p-button
+              (click)="exportInProgress()"
+              [icon]="Icons.EXPORT"
+              [loading]="exportingInProgress()"
+              [outlined]="true"
+              label="In-Progress Export"
+              severity="secondary"
+              size="small"
+            ></p-button>
+            <p-button
+              (click)="exportArchived()"
+              [icon]="Icons.EXPORT"
+              [loading]="exportingArchived()"
+              [outlined]="true"
+              label="Archived Export"
+              severity="secondary"
+              size="small"
+            ></p-button>
+          </div>
+          @if (lastRefreshedAt()) {
+            <span class="dashboard-last-refresh">
+              <i [class]="Icons.CLOCK"></i>
+              {{ lastRefreshedAt() | date: "dd MMM, HH:mm:ss" }}
+            </span>
+          }
+          <button
+            (click)="refresh()"
+            [disabled]="loading()"
+            class="dashboard-refresh-btn"
+            type="button"
+          >
+            <i [class.pi-spin]="loading()" [class]="Icons.REFRESH"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- ===================================================================
+       Loading state
+       =================================================================== -->
+  @if (loading()) {
+    <div class="dashboard-loading">
+      <i [class]="Icons.SPINNER_SPIN"></i>
+      <span>Loading dashboard...</span>
+    </div>
+  } @else {
+    <!-- ===================================================================
+         KPI Row
+         =================================================================== -->
+    <app-dashboard-kpis [kpis]="globalKpis()"></app-dashboard-kpis>
+
+    <!-- ===================================================================
+         Modules Row
+         =================================================================== -->
+    <div class="modules-grid">
+      <div class="module-panel panel--orders">
+        <app-dashboard-worst-orders
+          [orders]="worstNpiOrders()"
+        ></app-dashboard-worst-orders>
+      </div>
+
+      <div class="module-panel panel--pie">
+        <app-dashboard-status-chart
+          [data]="npiCountByStatus()"
+        ></app-dashboard-status-chart>
+      </div>
+
+      <div class="module-panel panel--bar">
+        <app-dashboard-process-stage-chart
+          [data]="processStageKpis()"
+        ></app-dashboard-process-stage-chart>
+      </div>
+    </div>
+  }
+</p-card>
