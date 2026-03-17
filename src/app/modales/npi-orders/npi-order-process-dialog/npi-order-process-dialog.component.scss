@@ -29,7 +29,9 @@
   border-radius: 10px;
   padding: 0.875rem 1rem;
   background: var(--surface-card);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &.is-editable {
     border-color: rgba(10, 132, 193, 0.3);
@@ -142,7 +144,10 @@
   font-weight: 600;
   cursor: pointer;
   border: 1.5px solid transparent;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease;
 
   &:hover:not(:disabled) {
     transform: translateY(-1px);
@@ -317,6 +322,105 @@
       color: var(--text-color);
       margin-bottom: 0.375rem;
     }
+  }
+}
+
+// --- Import mode toggle (Manual date / Import from file) ---
+
+.import-mode-toggle {
+  display: flex;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+}
+
+// --- Import file section ---
+
+.import-file-section {
+  margin-bottom: 0.75rem;
+}
+
+.import-file-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  margin: 0 0 0.625rem 0;
+
+  i {
+    font-size: 0.75rem;
+    color: var(--main-color);
+    opacity: 0.75;
+  }
+}
+
+.import-file-uploaded {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #166534;
+  background: rgba(72, 180, 97, 0.07);
+  border: 1px solid rgba(72, 180, 97, 0.2);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  margin-bottom: 0.875rem;
+
+  i {
+    font-size: 0.875rem;
+  }
+}
+
+.import-coords {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+
+  .extra-field {
+    flex: 1;
+    min-width: 100px;
+    margin-bottom: 0;
+  }
+}
+
+.import-coords__hint {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-color-secondary);
+  margin-left: 0.2rem;
+}
+
+.import-coords__letter {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  background: rgba(10, 132, 193, 0.1);
+  color: var(--main-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.import-date-result {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: #166534;
+  background: rgba(72, 180, 97, 0.07);
+  border: 1px solid rgba(72, 180, 97, 0.2);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+
+  i {
+    font-size: 0.875rem;
+  }
+
+  strong {
+    font-weight: 700;
   }
 }
 

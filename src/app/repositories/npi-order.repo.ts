@@ -9,6 +9,7 @@ import {
   NpiOrderUpdate,
   OutputProcessLineUpdate,
   Process,
+  ProcessLineMaterialDeliveryDateImport,
   ProcessLineStatusesHistory,
   ProcessLineStatusUpdateBody,
 } from "../../client/npiSeiko";
@@ -104,5 +105,18 @@ export class NpiOrderRepo {
         body,
       }),
     ) as Observable<OutputProcessLineUpdate>;
+  }
+
+  importNpiOrderProcessLineMaterialDeliveryDate(
+    uid: string,
+    lineUid: string,
+    body: ProcessLineMaterialDeliveryDateImport,
+  ): Observable<string> {
+    return fromRequest(
+      this.npiOrderService.importMaterialLatestDeliveryDate({
+        path: { uid, lineUid },
+        body,
+      }),
+    ) as Observable<string>;
   }
 }

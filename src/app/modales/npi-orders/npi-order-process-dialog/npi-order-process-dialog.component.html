@@ -153,25 +153,130 @@
         >:
       </p>
 
+      <!-- Material purchase: manual date OR import from file -->
       @if (
         line.isMaterialPurchase &&
         pendingTargetStatus() === ProcessLineStatus.IN_PROGRESS
       ) {
-        <div class="extra-field">
-          <label>
-            Latest Delivery Date
-            <span class="required-indicator">*</span>
-          </label>
-          <p-datePicker
-            (ngModelChange)="pendingLatestDeliveryDate = $event"
-            [ngModel]="pendingLatestDeliveryDate"
-            appendTo="body"
-            dateFormat="yy-mm-dd"
-            placeholder="Select latest delivery date"
-          ></p-datePicker>
+        <div class="import-mode-toggle">
+          <p-button
+            (click)="setImportMode(false)"
+            [icon]="Icons.CALENDAR"
+            [outlined]="importMode()"
+            label="Manual date"
+            severity="secondary"
+            size="small"
+          ></p-button>
+          <p-button
+            (click)="setImportMode(true)"
+            [icon]="Icons.FILE_EXCEL"
+            [outlined]="!importMode()"
+            label="Import from file"
+            severity="secondary"
+            size="small"
+          ></p-button>
         </div>
+
+        @if (!importMode()) {
+          <div class="extra-field">
+            <label>
+              Latest Delivery Date
+              <span class="required-indicator">*</span>
+            </label>
+            <p-datePicker
+              (ngModelChange)="pendingLatestDeliveryDate = $event"
+              [ngModel]="pendingLatestDeliveryDate"
+              appendTo="body"
+              dateFormat="yy-mm-dd"
+              placeholder="Select latest delivery date"
+            ></p-datePicker>
+          </div>
+        }
+
+        @if (importMode()) {
+          <div class="import-file-section">
+            <!-- Step 1: upload file -->
+            @if (!importedFileUid()) {
+              <p class="import-file-hint">
+                <i [class]="Icons.INFO_CIRCLE"></i>
+                Upload an Excel file to extract the delivery date.
+              </p>
+              <app-manage-file
+                (uploadedEventEmitter)="onTemporaryFileUploaded($event)"
+                [canDeletion]="false"
+                [defaultUrl]="temporaryFilesUrl"
+                [multiple]="false"
+                [showDownloadButton]="false"
+                [showGlobalDownloadBtn]="false"
+              ></app-manage-file>
+            }
+
+            <!-- Step 2: specify coordinates + extract -->
+            @if (importedFileUid() && !importedDeliveryDate()) {
+              <div class="import-file-uploaded">
+                <i [class]="Icons.FILE_CHECK"></i>
+                <span>File uploaded — specify the cell location:</span>
+              </div>
+              <div class="import-coords">
+                <div class="extra-field">
+                  <label>
+                    Sheet
+                    <span class="import-coords__hint">(1 = first sheet)</span>
+                  </label>
+                  <p-inputNumber
+                    [(ngModel)]="importSheetDisplay"
+                    [min]="1"
+                    placeholder="1"
+                  ></p-inputNumber>
+                </div>
+                <div class="extra-field">
+                  <label>
+                    Column
+                    @if (importColumnDisplay >= 1) {
+                      <span class="import-coords__letter">
+                        {{ excelUtils.columnToLetter(importColumnDisplay) }}
+                      </span>
+                    }
+                  </label>
+                  <p-inputNumber
+                    [(ngModel)]="importColumnDisplay"
+                    [min]="1"
+                    placeholder="1"
+                  ></p-inputNumber>
+                </div>
+                <div class="extra-field">
+                  <label>Row</label>
+                  <p-inputNumber
+                    [(ngModel)]="importRowDisplay"
+                    [min]="1"
+                    placeholder="1"
+                  ></p-inputNumber>
+                </div>
+              </div>
+              <p-button
+                (click)="extractDeliveryDate(line)"
+                [disabled]="!canExtractDate()"
+                [icon]="extracting() ? Icons.SPINNER_SPIN : Icons.FILE_EXCEL"
+                [loading]="extracting()"
+                label="Extract date"
+                severity="secondary"
+                size="small"
+              ></p-button>
+            }
+
+            <!-- Step 3: show extracted date (read-only) -->
+            @if (importedDeliveryDate()) {
+              <div class="import-date-result">
+                <i [class]="Icons.CALENDAR_CLOCK"></i>
+                <span>Extracted date:</span>
+                <strong>{{ importedDeliveryDate() }}</strong>
+              </div>
+            }
+          </div>
+        }
       }
 
+      <!-- Production / testing: remaining time -->
       @if (
         (line.isProduction || line.isTesting) &&
         pendingTargetStatus() === ProcessLineStatus.IN_PROGRESS
