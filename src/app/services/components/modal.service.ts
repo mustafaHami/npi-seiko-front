@@ -6,6 +6,7 @@ import { map } from "rxjs/operators";
 import { FileSelected } from "../../components/manage-file/manage-file.component";
 import { ManagePreviewFileComponent } from "../../components/manage-preview-file/manage-preview-file.component";
 import { NpiOrderCreateEditDialogComponent } from "../../modales/npi-orders/npi-order-create-edit-dialog/npi-order-create-edit-dialog.component";
+import { NpiOrderProcessDialogComponent } from "../../modales/npi-orders/npi-order-process-dialog/npi-order-process-dialog.component";
 
 @Injectable({
   providedIn: "root",
@@ -47,6 +48,19 @@ export class ModalService {
         editMode,
         npiOrder,
       },
+    });
+    return this.waitForDialogResult<boolean>(this.ref);
+  }
+
+  showNpiOrderProcessModal(npiOrder: NpiOrder) {
+    this.ref = this.dialogService.open(NpiOrderProcessDialogComponent, {
+      header: `Process${npiOrder.purchaseOrderNumber ? ` — ${npiOrder.purchaseOrderNumber}` : ""}`,
+      draggable: false,
+      modal: true,
+      closable: true,
+      resizable: false,
+      width: "55%",
+      data: { npiOrder },
     });
     return this.waitForDialogResult<boolean>(this.ref);
   }

@@ -7,6 +7,9 @@ import {
   NpiOrderSearch,
   NpiOrdersPaginated,
   NpiOrderUpdate,
+  OutputProcessLineUpdate,
+  Process,
+  ProcessLineStatusUpdateBody,
 } from "../../client/npiSeiko";
 import { Observable } from "rxjs";
 import { fromRequest } from "../services/utils/api-utils";
@@ -68,5 +71,26 @@ export class NpiOrderRepo {
         path: { uid },
       }),
     ) as Observable<NpiOrder>;
+  }
+
+  getNpiOrderProcess(uid: string): Observable<Process> {
+    return fromRequest(
+      this.npiOrderService.retriveNpiOrderProcess({
+        path: { uid },
+      }),
+    ) as Observable<Process>;
+  }
+
+  updateNpiOrderProcessLineStatus(
+    uid: string,
+    lineUid: string,
+    body: ProcessLineStatusUpdateBody,
+  ): Observable<OutputProcessLineUpdate> {
+    return fromRequest(
+      this.npiOrderService.updateNpiOrderProcessLineStatus({
+        path: { uid, lineUid },
+        body,
+      }),
+    ) as Observable<OutputProcessLineUpdate>;
   }
 }

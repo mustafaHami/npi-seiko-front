@@ -19,13 +19,13 @@ export class NpiOrderStatusPipe implements PipeTransform {
   private getLabel(value: NpiOrderStatus): string {
     switch (value) {
       case NpiOrderStatus.READY_TO_PRODUCTION:
-        return "Ready to Production";
+        return "READY TO PRODUCTION";
       case NpiOrderStatus.STARTED:
-        return "Started";
+        return "STARTED";
       case NpiOrderStatus.COMPLETED:
-        return "Completed";
+        return "COMPLETED";
       case NpiOrderStatus.ABORTED:
-        return "Aborted";
+        return "ABORTED";
       default:
         return "";
     }

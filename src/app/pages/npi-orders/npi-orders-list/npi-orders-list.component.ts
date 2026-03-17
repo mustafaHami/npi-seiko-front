@@ -104,6 +104,17 @@ export class NpiOrdersListComponent extends BaseListComponent implements OnInit 
       });
   }
 
+  openProcessDialog(npiOrder: NpiOrder): void {
+    this.modalService
+      .showNpiOrderProcessModal(npiOrder)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((changed?: boolean) => {
+        if (changed) {
+          this.loadData(this.lastTableLazyLoadEvent);
+        }
+      });
+  }
+
   abortNpiOrder(npiOrder: NpiOrder): void {
     this.npiOrderRepo
       .abortNpiOrder(npiOrder.uid)

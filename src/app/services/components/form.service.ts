@@ -67,7 +67,7 @@ export class FormService {
         [Validators.required, Validators.min(1)],
       ),
       [NpiOrderFormField.ORDER_DATE]: new FormControl<Date | null>(
-        npiOrder?.orderDate ? new Date(npiOrder.orderDate) : null,
+        npiOrder?.orderDate ? new Date(npiOrder.orderDate) : new Date(),
         [Validators.required],
       ),
       [NpiOrderFormField.TARGET_DELIVERY_DATE]: new FormControl<Date | null>(

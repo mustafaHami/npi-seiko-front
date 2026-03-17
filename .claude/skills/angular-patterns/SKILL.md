@@ -55,21 +55,21 @@ export class MyComponentComponent {
 ```typescript
 // ❌ BAD: Explicit standalone declaration (it's the default)
 @Component({
-    selector: "app-my-component",
-    standalone: true, // REMOVE THIS
+  selector: "app-my-component",
+  standalone: true, // REMOVE THIS
 })
 
 // ❌ BAD: Constructor injection
 export class MyComponent {
-    constructor(
-        private userRepo: UserRepo,
-        private router: Router,
-    ) {
-    }
+  constructor(
+    private userRepo: UserRepo,
+    private router: Router,
+  ) {
+  }
 }
 
 // ❌ BAD: Old @Input/@Output decorators
-@Input({required: true})
+@Input({ required: true })
 userId!
 :
 string;
@@ -90,11 +90,11 @@ isActive = true;
 
 // ✅ GOOD: Use host property in @Component decorator
 @Component({
-    selector: "app-my-component",
-    host: {
-        '(click)': 'handleClick($event)',
-        '[class.active]': 'isActive',
-    }
+  selector: "app-my-component",
+  host: {
+    '(click)': 'handleClick($event)',
+    '[class.active]': 'isActive',
+  }
 })
 ```
 
@@ -394,9 +394,9 @@ export class MarkupApprovalStrategyPipe implements PipeTransform {
   transform(value: MarkupApprovalStrategy): string {
     switch (value) {
       case MarkupApprovalStrategy.FOR_ALL_QUOTATIONS:
-        return "For All Quotations";
+        return "FOR ALL QUOTATIONS";
       case MarkupApprovalStrategy.BASED_ON_CUSTOM_RULES:
-        return "Based on Custom Rules";
+        return "BASED ON CUSTOM RULES";
       default:
         return "";
     }
@@ -481,9 +481,9 @@ fieldConfigs = [
 ```typescript
 // Component
 export class MyComponent {
-    protected readonly CostRequestStatus = CostRequestStatus; // Expose enum to template
+  protected readonly CostRequestStatus = CostRequestStatus; // Expose enum to template
 
-    costRequest = signal<CostRequest>({...});
+  costRequest = signal<CostRequest>({ ... });
 }
 ```
 
@@ -588,3 +588,12 @@ templates.
 13. ❌ **NEVER** hardcode enum options in components
 14. ❌ **NEVER** use hard-coded enum string values in template comparisons or conditions
 15. ❌ **NEVER** use inline `pi pi-*` strings in templates — always reference `Icons` enum
+16. ❌ **NEVER** display a `uid` (UUID) as user-facing text — UIDs are technical identifiers, not labels. If a human-readable value is absent, show `null` or omit entirely
+
+```typescript
+// ❌ BAD: uid as fallback text
+header: `Edit — ${item.name ?? item.uid}`
+
+// ✅ GOOD: show the meaningful value or nothing
+header: `Edit${item.name ? ` — ${item.name}` : ""}`
+```

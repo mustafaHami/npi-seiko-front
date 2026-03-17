@@ -1181,7 +1181,7 @@ components:
         remainingTime:
           type: number
           format: double
-        materialLastDeliveryDate:
+        materialLatestDeliveryDate:
           type: string
           format: date
         planTime:
@@ -1226,7 +1226,7 @@ components:
         remainingDuration:
           type: number
           format: double
-        materialLastDeliveryDate:
+        materialLatestDeliveryDate:
           type: string
           format: date
         planTime:
@@ -1234,6 +1234,14 @@ components:
           format: double
         nbFiles:
           type: integer
+        isMaterialPurchase:
+          type: boolean
+        isShipment:
+          type: boolean
+        isProduction:
+          type: boolean
+        isTesting:
+          type: boolean
     NpiOrdersPaginated:
       type: object
       allOf:
@@ -1253,7 +1261,6 @@ components:
         - workOrderId
         - partNumber
         - quantity
-        - orderDate
         - productionPlanTime
         - testingPlanTime
       properties:
@@ -1288,7 +1295,6 @@ components:
         - workOrderId
         - partNumber
         - quantity
-        - orderDate
         - productionPlanTime
         - testingPlanTime
       properties:
@@ -1325,7 +1331,6 @@ components:
         - costRequestRevision
         - projectName
         - purchaseOrderExpectedDate
-        - orderDate
         - status
         - creationDate
         - updatedAt

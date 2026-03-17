@@ -186,5 +186,6 @@ npm run openapi-ts   # Regenerate from swagger-npi-seiko.yaml
 - ✅ **Use takeUntilDestroyed for subscriptions**
 - ✅ **All code and comments MUST be in English**
 - ✅ **All components MUST pass AXE accessibility checks**
+- ❌ **NEVER display a `uid` (UUID) as user-facing text** — show the meaningful label or nothing
 
 For detailed examples and complete specifications, refer to the skill files in `.claude/skills/`.

@@ -1,0 +1,180 @@
+@if (loading()) {
+  <div class="process-loading">
+    <i [class]="Icons.SPINNER_SPIN"></i>
+    <span>Loading process...</span>
+  </div>
+} @else if (process(); as proc) {
+  <div class="process-lines">
+    @for (line of proc.lines; track line.uid; let i = $index) {
+      <div
+        [class.is-aborted]="line.status === ProcessLineStatus.ABORTED"
+        [class.is-completed]="line.status === ProcessLineStatus.COMPLETED"
+        [class.is-editable]="editableLineIndices().has(i)"
+        [class.is-editing]="editingLineIndex() === i"
+        class="process-line"
+      >
+        <!-- Line header -->
+        <div class="line-header">
+          <div class="line-identity">
+            <span class="line-index">{{ i + 1 }}</span>
+            <span class="line-name">{{ line.processName }}</span>
+          </div>
+          <div class="line-meta">
+            <p-tag
+              [severity]="line.status | processLineStatus: 'severity'"
+              [value]="line.status | processLineStatus"
+            />
+            @if (editableLineIndices().has(i) && editingLineIndex() !== i) {
+              <p-button
+                (click)="openEditPanel(i)"
+                [icon]="Icons.PENCIL"
+                [text]="true"
+                label="Change status"
+                size="small"
+              ></p-button>
+            }
+            @if (editingLineIndex() === i) {
+              <p-button
+                (click)="cancelEdit()"
+                [icon]="Icons.TIMES"
+                [text]="true"
+                severity="secondary"
+                size="small"
+              ></p-button>
+            }
+          </div>
+        </div>
+
+        <!-- Line metadata -->
+        @if (
+          line.planTime ||
+          line.remainingDuration ||
+          line.materialLatestDeliveryDate
+        ) {
+          <div class="line-details">
+            @if (line.planTime) {
+              <span class="line-detail-item">
+                <i [class]="Icons.CALENDAR"></i>
+                Plan: {{ line.planTime }} day(s)
+              </span>
+            }
+            @if (line.remainingDuration) {
+              <span class="line-detail-item">
+                <i [class]="Icons.CLOCK"></i>
+                Remaining: {{ line.remainingDuration }} day(s)
+              </span>
+            }
+            @if (line.materialLatestDeliveryDate) {
+              <span class="line-detail-item">
+                <i [class]="Icons.TRUCK"></i>
+                Latest delivery: {{ line.materialLatestDeliveryDate }}
+              </span>
+            }
+          </div>
+        }
+
+        <!-- Status change panel -->
+        @if (editingLineIndex() === i) {
+          <div class="status-change-panel">
+            <!-- Step 1: available statuses -->
+            @if (!pendingTargetStatus()) {
+              <p class="panel-instruction">Select the new status:</p>
+              <div class="status-options">
+                @for (status of availableStatuses(line); track status) {
+                  <button
+                    (click)="selectTargetStatus(line, status)"
+                    [class.status-option--aborted]="
+                      status === ProcessLineStatus.ABORTED
+                    "
+                    [class.status-option--completed]="
+                      status === ProcessLineStatus.COMPLETED
+                    "
+                    [class.status-option--in-progress]="
+                      status === ProcessLineStatus.IN_PROGRESS
+                    "
+                    [class.status-option--not-started]="
+                      status === ProcessLineStatus.NOT_STARTED
+                    "
+                    class="status-option"
+                    type="button"
+                  >
+                    {{ status | processLineStatus }}
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- Step 2: extra fields required before confirming -->
+            @if (pendingTargetStatus()) {
+              <div class="extra-fields">
+                <p class="panel-instruction">
+                  Additional info required to set
+                  <strong>{{
+                    pendingTargetStatus()! | processLineStatus
+                  }}</strong
+                  >:
+                </p>
+
+                @if (
+                  line.isMaterialPurchase &&
+                  pendingTargetStatus() === ProcessLineStatus.IN_PROGRESS
+                ) {
+                  <div class="extra-field">
+                    <label>
+                      Latest Delivery Date
+                      <span class="required-indicator">*</span>
+                    </label>
+                    <p-datePicker
+                      (ngModelChange)="pendingLatestDeliveryDate = $event"
+                      [ngModel]="pendingLatestDeliveryDate"
+                      appendTo="body"
+                      dateFormat="yy-mm-dd"
+                      placeholder="Select latest delivery date"
+                    ></p-datePicker>
+                  </div>
+                }
+
+                @if (
+                  (line.isProduction || line.isTesting) &&
+                  pendingTargetStatus() === ProcessLineStatus.IN_PROGRESS
+                ) {
+                  <div class="extra-field">
+                    <label>
+                      Remaining Time (days)
+                      <span class="required-indicator">*</span>
+                    </label>
+                    <p-inputNumber
+                      (ngModelChange)="pendingRemainingTime = $event"
+                      [min]="0"
+                      [ngModel]="pendingRemainingTime"
+                      placeholder="Enter remaining days"
+                    ></p-inputNumber>
+                  </div>
+                }
+
+                <div class="extra-fields-actions">
+                  <p-button
+                    (click)="backToStatusSelection()"
+                    [icon]="Icons.ARROW_LEFT"
+                    [text]="true"
+                    label="Back"
+                    severity="secondary"
+                    size="small"
+                  ></p-button>
+                  <p-button
+                    (click)="confirmPendingUpdate(line)"
+                    [disabled]="!canConfirmPending(line)"
+                    [icon]="Icons.CHECK"
+                    label="Confirm"
+                    severity="success"
+                    size="small"
+                  ></p-button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

@@ -72,6 +72,13 @@
             pTooltip="Edit"
             tooltipPosition="top"
           ></p-button>
+          <p-button
+            (click)="openProcessDialog(npiOrder)"
+            [icon]="Icons.LIST_CHECK"
+            [text]="true"
+            pTooltip="Manage Process"
+            tooltipPosition="top"
+          ></p-button>
           @if (canAbort(npiOrder)) {
             <p-button
               (onClick)="abortNpiOrder(npiOrder)"

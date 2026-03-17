@@ -84,4 +84,6 @@ export enum Icons {
   TABLE = "pi pi-table",
   CARD = "pi pi-objects-column",
   LOCK = "pi pi-lock",
+  LIST_CHECK = "pi pi-list-check",
+  ARROW_LEFT = "pi pi-arrow-left",
 }
