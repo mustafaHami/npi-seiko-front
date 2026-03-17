@@ -71,6 +71,8 @@ export class NpiOrderProcessDialogComponent
   pendingTargetStatus = signal<ProcessLineStatus | null>(null);
   /** Manual date for material purchase */
   pendingLatestDeliveryDate: Date | null = null;
+  /** Manual date for shipment completion */
+  pendingShippingDate: Date | null = null;
 
   /** UID of the line currently in edit (reset) mode */
   editingLineUid = signal<string | null>(null);
@@ -138,7 +140,7 @@ export class NpiOrderProcessDialogComponent
     // Lines requiring extra fields on IN_PROGRESS must go through IN_PROGRESS first
     if (
       line.status === ProcessLineStatus.NOT_STARTED &&
-      (line.isMaterialPurchase || line.isProduction || line.isTesting)
+      line.isMaterialPurchase
     ) {
       return all.filter((s) => s !== ProcessLineStatus.COMPLETED);
     }
@@ -152,8 +154,9 @@ export class NpiOrderProcessDialogComponent
   ): boolean {
     if (!line) return false;
     return (
-      !!line.isMaterialPurchase &&
-      targetStatus! === ProcessLineStatus.IN_PROGRESS
+      (!!line.isMaterialPurchase &&
+        targetStatus === ProcessLineStatus.IN_PROGRESS) ||
+      (!!line.isShipment && targetStatus === ProcessLineStatus.COMPLETED)
     );
   }
 
@@ -165,6 +168,9 @@ export class NpiOrderProcessDialogComponent
         return this.importedDeliveryDate() !== null;
       }
       return this.pendingLatestDeliveryDate !== null;
+    }
+    if (line.isShipment && target === ProcessLineStatus.COMPLETED) {
+      return this.pendingShippingDate !== null;
     }
     return true;
   }
@@ -192,6 +198,7 @@ export class NpiOrderProcessDialogComponent
     this.pendingLineIndex.set(lineIndex);
     this.pendingTargetStatus.set(status);
     this.pendingLatestDeliveryDate = null;
+    this.pendingShippingDate = null;
     this.importMode.set(false);
     this.importedFileUid.set(null);
     this.importSheetDisplay = 1;
@@ -278,6 +285,7 @@ export class NpiOrderProcessDialogComponent
     this.importedFileUid.set(null);
     this.importedDeliveryDate.set(null);
     this.pendingLatestDeliveryDate = null;
+    this.pendingShippingDate = null;
     this.importSheetDisplay = 1;
     this.importColumnDisplay = 1;
     this.importRowDisplay = 1;
@@ -351,6 +359,7 @@ export class NpiOrderProcessDialogComponent
     this.pendingLineIndex.set(null);
     this.pendingTargetStatus.set(null);
     this.pendingLatestDeliveryDate = null;
+    this.pendingShippingDate = null;
     this.importMode.set(false);
     this.importedFileUid.set(null);
     this.importedDeliveryDate.set(null);
@@ -424,6 +433,14 @@ export class NpiOrderProcessDialogComponent
       body.materialLatestDeliveryDate = this.pendingLatestDeliveryDate
         .toISOString()
         .split("T")[0];
+    }
+
+    if (
+      line.isShipment &&
+      targetStatus === ProcessLineStatus.COMPLETED &&
+      this.pendingShippingDate
+    ) {
+      body.shippingDate = this.pendingShippingDate.toISOString().split("T")[0];
     }
 
     this.npiOrderRepo

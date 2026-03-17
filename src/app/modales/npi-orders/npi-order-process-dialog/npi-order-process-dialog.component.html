@@ -80,8 +80,8 @@
     <p-chip
       [icon]="Icons.CALENDAR_CLOCK"
       [label]="
-        line.planTime !== null && line.planTime !== undefined
-          ? 'Plan: ' + line.planTime + ' day(s)'
+        line.planTimeInHours !== null && line.planTimeInHours !== undefined
+          ? 'Plan: ' + line.planTimeInHours + ' h'
           : 'Plan: -'
       "
       class="chip--primary small chip--square"
@@ -175,7 +175,7 @@
 </ng-template>
 
 <!-- =====================================================================
-     Extra fields step (material delivery date / remaining time)
+     Extra fields step (material delivery / shipment date)
      ===================================================================== -->
 <ng-template #extraFieldsTpl let-i="index" let-line>
   @if (pendingLineIndex() === i) {
@@ -307,6 +307,25 @@
             }
           </div>
         }
+      }
+
+      <!-- Shipment: manual shipping date -->
+      @if (
+        line.isShipment && pendingTargetStatus() === ProcessLineStatus.COMPLETED
+      ) {
+        <div class="extra-field">
+          <label>
+            Shipping Date
+            <span class="required-indicator">*</span>
+          </label>
+          <p-datePicker
+            (ngModelChange)="pendingShippingDate = $event"
+            [ngModel]="pendingShippingDate"
+            appendTo="body"
+            dateFormat="yy-mm-dd"
+            placeholder="Select shipping date"
+          ></p-datePicker>
+        </div>
       }
 
       <div class="extra-fields-actions">
