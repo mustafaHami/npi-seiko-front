@@ -81,14 +81,36 @@ export class FormService {
       [NpiOrderFormField.PRODUCT_NAME]: new FormControl<string>(
         npiOrder?.productName ?? "",
       ),
-      [NpiOrderFormField.PRODUCTION_PLAN_TIME]: new FormControl<number | null>(
-        null,
-        [Validators.required],
-      ),
-      [NpiOrderFormField.TESTING_PLAN_TIME]: new FormControl<number | null>(
-        null,
-        [Validators.required],
-      ),
+      [NpiOrderFormField.MATERIAL_PURCHASE_PLAN_TIME_IN_HOURS]:
+        new FormControl<number | null>(null, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+      [NpiOrderFormField.MATERIAL_RECEIVING_PLAN_TIME_IN_HOURS]:
+        new FormControl<number | null>(null, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+      [NpiOrderFormField.PRODUCTION_PLAN_TIME_IN_HOURS]:
+        new FormControl<number | null>(null, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+      [NpiOrderFormField.TESTING_PLAN_TIME_IN_HOURS]:
+        new FormControl<number | null>(null, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+      [NpiOrderFormField.SHIPPING_PLAN_TIME_IN_HOURS]:
+        new FormControl<number | null>(null, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+      [NpiOrderFormField.CUSTOMER_APPROVAL_PLAN_TIME_IN_HOURS]:
+        new FormControl<number | null>(null, [
+          Validators.required,
+          Validators.min(0),
+        ]),
     });
   }
 

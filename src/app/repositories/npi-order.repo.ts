@@ -7,9 +7,10 @@ import {
   NpiOrderSearch,
   NpiOrdersPaginated,
   NpiOrderUpdate,
-  OutputProcessLineUpdate,
   Process,
+  ProcessLine,
   ProcessLineMaterialDeliveryDateImport,
+  ProcessLineRemainingTimeUpdate,
   ProcessLineStatusesHistory,
   ProcessLineStatusUpdateBody,
 } from "../../client/npiSeiko";
@@ -98,13 +99,26 @@ export class NpiOrderRepo {
     uid: string,
     lineUid: string,
     body: ProcessLineStatusUpdateBody,
-  ): Observable<OutputProcessLineUpdate> {
+  ): Observable<ProcessLine[]> {
     return fromRequest(
       this.npiOrderService.updateNpiOrderProcessLineStatus({
         path: { uid, lineUid },
         body,
       }),
-    ) as Observable<OutputProcessLineUpdate>;
+    ) as Observable<ProcessLine[]>;
+  }
+
+  updateProcessLineRemainingTime(
+    uid: string,
+    lineUid: string,
+    body: ProcessLineRemainingTimeUpdate,
+  ): Observable<ProcessLine> {
+    return fromRequest(
+      this.npiOrderService.updateProcessLineRemainingTime({
+        path: { uid, lineUid },
+        body,
+      }),
+    ) as Observable<ProcessLine>;
   }
 
   importNpiOrderProcessLineMaterialDeliveryDate(

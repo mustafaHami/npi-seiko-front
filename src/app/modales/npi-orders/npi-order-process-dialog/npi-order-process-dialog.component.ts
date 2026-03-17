@@ -21,11 +21,11 @@ import {
   Process,
   ProcessLine,
   ProcessLineMaterialDeliveryDateImport,
+  ProcessLineRemainingTimeUpdate,
   ProcessLineStatus,
   ProcessLineStatusHistory,
   ProcessLineStatusUpdateBody,
 } from "../../../../client/npiSeiko";
-
 import { BaseModal } from "../../../models/classes/base-modal";
 import { NpiOrderRepo } from "../../../repositories/npi-order.repo";
 import { NpiOrderProcessLinePipe } from "../../../pipes/npi-order-process-line.pipe";
@@ -68,7 +68,14 @@ export class NpiOrderProcessDialogComponent
   pendingTargetStatus = signal<ProcessLineStatus | null>(null);
   /** Manual date for material purchase */
   pendingLatestDeliveryDate: Date | null = null;
-  pendingRemainingTime: number | null = null;
+
+  /** UID of the line currently in edit (reset) mode */
+  editingLineUid = signal<string | null>(null);
+
+  /** Remaining time inline update */
+  remainingTimeLineUid = signal<string | null>(null);
+  remainingTimeInput: number | null = null;
+  updatingRemainingTime = signal<boolean>(false);
 
   /** Import mode for material purchase delivery date */
   importMode = signal<boolean>(false);
@@ -136,19 +143,11 @@ export class NpiOrderProcessDialogComponent
     line: ProcessLine,
     targetStatus: ProcessLineStatus,
   ): boolean {
-    if (
-      line.isMaterialPurchase &&
-      targetStatus === ProcessLineStatus.IN_PROGRESS
-    ) {
-      return true;
-    }
-    if (
-      (line.isProduction || line.isTesting) &&
-      targetStatus === ProcessLineStatus.IN_PROGRESS
-    ) {
-      return true;
-    }
-    return false;
+    if (!line) return false;
+    return (
+      !!line.isMaterialPurchase &&
+      targetStatus! === ProcessLineStatus.IN_PROGRESS
+    );
   }
 
   canConfirmPending(line: ProcessLine): boolean {
@@ -159,12 +158,6 @@ export class NpiOrderProcessDialogComponent
         return this.importedDeliveryDate() !== null;
       }
       return this.pendingLatestDeliveryDate !== null;
-    }
-    if (
-      (line.isProduction || line.isTesting) &&
-      target === ProcessLineStatus.IN_PROGRESS
-    ) {
-      return this.pendingRemainingTime !== null;
     }
     return true;
   }
@@ -186,7 +179,6 @@ export class NpiOrderProcessDialogComponent
     this.pendingLineIndex.set(lineIndex);
     this.pendingTargetStatus.set(status);
     this.pendingLatestDeliveryDate = null;
-    this.pendingRemainingTime = null;
     this.importMode.set(false);
     this.importedFileUid.set(null);
     this.importSheetDisplay = 1;
@@ -202,6 +194,58 @@ export class NpiOrderProcessDialogComponent
 
   backToStatusSelection(): void {
     this.clearPending();
+  }
+
+  toggleEditMode(line: ProcessLine): void {
+    const uid = line.uid!;
+    this.editingLineUid.set(this.editingLineUid() === uid ? null : uid);
+  }
+
+  selectResetStatus(line: ProcessLine, status: ProcessLineStatus): void {
+    this.editingLineUid.set(null);
+    this.doUpdateStatus(line, status);
+  }
+
+  toggleRemainingTime(line: ProcessLine): void {
+    const uid = line.uid!;
+    if (this.remainingTimeLineUid() === uid) {
+      this.remainingTimeLineUid.set(null);
+      this.remainingTimeInput = null;
+    } else {
+      this.remainingTimeLineUid.set(uid);
+      this.remainingTimeInput = line.remainingTimeInHours ?? null;
+    }
+  }
+
+  confirmRemainingTimeUpdate(line: ProcessLine): void {
+    if (this.remainingTimeInput === null) return;
+    const uid = this.npiOrder()!.uid;
+    const lineUid = line.uid!;
+    const body: ProcessLineRemainingTimeUpdate = {
+      remainingTimeInHours: this.remainingTimeInput,
+    };
+    this.updatingRemainingTime.set(true);
+    this.npiOrderRepo
+      .updateProcessLineRemainingTime(uid, lineUid, body)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updatedLine) => {
+          const current = this.process();
+          if (current) {
+            const updatedLines = current.lines.map((l) =>
+              l.uid === updatedLine.uid ? updatedLine : l,
+            );
+            this.process.set({ ...current, lines: updatedLines });
+          }
+          this.remainingTimeLineUid.set(null);
+          this.remainingTimeInput = null;
+          this.updatingRemainingTime.set(false);
+          this.handleMessage.successMessage("Remaining time updated");
+        },
+        error: () => {
+          this.updatingRemainingTime.set(false);
+        },
+      });
   }
 
   setImportMode(value: boolean): void {
@@ -285,7 +329,6 @@ export class NpiOrderProcessDialogComponent
     this.pendingLineIndex.set(null);
     this.pendingTargetStatus.set(null);
     this.pendingLatestDeliveryDate = null;
-    this.pendingRemainingTime = null;
     this.importMode.set(false);
     this.importedFileUid.set(null);
     this.importedDeliveryDate.set(null);
@@ -298,20 +341,20 @@ export class NpiOrderProcessDialogComponent
   private handleStatusUpdateSuccess(
     line: ProcessLine,
     targetStatus: ProcessLineStatus,
-    result: { updatedProcessLine: ProcessLine; processIsCompleted?: boolean },
+    updatedLines: ProcessLine[],
   ): void {
     this.handleMessage.successMessage(
       `${line.processName} updated to ${targetStatus}`,
     );
     const current = this.process();
     if (current) {
-      const updatedLines = current.lines.map((l) =>
-        l.uid === result.updatedProcessLine.uid ? result.updatedProcessLine : l,
-      );
       this.process.set({ ...current, lines: updatedLines });
     }
     this.clearPending();
-    if (result.processIsCompleted === true) {
+    const allCompleted = updatedLines.every(
+      (l) => l.status === ProcessLineStatus.COMPLETED,
+    );
+    if (allCompleted) {
       this.handleMessage.successMessage("NPI process completed!");
       this.closeDialog(true);
     }
@@ -354,14 +397,6 @@ export class NpiOrderProcessDialogComponent
       body.materialLatestDeliveryDate = this.pendingLatestDeliveryDate
         .toISOString()
         .split("T")[0];
-    }
-
-    if (
-      (line.isProduction || line.isTesting) &&
-      targetStatus === ProcessLineStatus.IN_PROGRESS &&
-      this.pendingRemainingTime !== null
-    ) {
-      body.remainingTime = this.pendingRemainingTime;
     }
 
     this.npiOrderRepo

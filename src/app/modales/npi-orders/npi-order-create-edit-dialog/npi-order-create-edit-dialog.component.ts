@@ -24,6 +24,7 @@ import { NpiOrderRepo } from "../../../repositories/npi-order.repo";
 import { NpiOrderFormField } from "../../../models/enums/form-field-names/npi-order-form-field";
 import { Icons } from "../../../models/enums/icons";
 import { NpiService } from "../../../services/npi.service";
+import { RegexPatterns } from "../../../services/utils/regex-patterns";
 
 @Component({
   selector: "app-npi-order-create-edit-dialog",
@@ -113,7 +114,7 @@ export class NpiOrderCreateEditDialogComponent
       });
   }
 
-  private buildBody(): NpiOrderCreate | NpiOrderUpdate {
+  private buildBody(): any {
     const form = this.npiOrderForm;
     const orderDateValue: Date | null =
       form.get(NpiOrderFormField.ORDER_DATE)?.value ?? null;
@@ -126,17 +127,32 @@ export class NpiOrderCreateEditDialogComponent
       partNumber: form.get(NpiOrderFormField.PART_NUMBER)?.value,
       quantity: form.get(NpiOrderFormField.QUANTITY)?.value,
       orderDate: orderDateValue
-        ? orderDateValue.toISOString().split("T")[0]
-        : undefined,
+        ? RegexPatterns.enDateFormatToString(orderDateValue)
+        : new Date().toISOString().split("T")[0],
       targetDeliveryDate: targetDeliveryDateValue
-        ? targetDeliveryDateValue.toISOString().split("T")[0]
-        : undefined,
+        ? RegexPatterns.enDateFormatToString(targetDeliveryDateValue)
+        : new Date().toISOString().split("T")[0],
       customerName:
         form.get(NpiOrderFormField.CUSTOMER_NAME)?.value || undefined,
       productName: form.get(NpiOrderFormField.PRODUCT_NAME)?.value || undefined,
-      productionPlanTime: form.get(NpiOrderFormField.PRODUCTION_PLAN_TIME)
-        ?.value,
-      testingPlanTime: form.get(NpiOrderFormField.TESTING_PLAN_TIME)?.value,
+      materialPurchasePlanTimeInHours: form.get(
+        NpiOrderFormField.MATERIAL_PURCHASE_PLAN_TIME_IN_HOURS,
+      )?.value,
+      materialReceivingPlanTimeInHours: form.get(
+        NpiOrderFormField.MATERIAL_RECEIVING_PLAN_TIME_IN_HOURS,
+      )?.value,
+      productionPlanTimeInHours: form.get(
+        NpiOrderFormField.PRODUCTION_PLAN_TIME_IN_HOURS,
+      )?.value,
+      testingPlanTimeInHours: form.get(
+        NpiOrderFormField.TESTING_PLAN_TIME_IN_HOURS,
+      )?.value,
+      shippingPlanTimeInHours: form.get(
+        NpiOrderFormField.SHIPPING_PLAN_TIME_IN_HOURS,
+      )?.value,
+      customerApprovalPlanTimeInHours: form.get(
+        NpiOrderFormField.CUSTOMER_APPROVAL_PLAN_TIME_IN_HOURS,
+      )?.value,
     } as NpiOrderCreate | NpiOrderUpdate;
   }
 }

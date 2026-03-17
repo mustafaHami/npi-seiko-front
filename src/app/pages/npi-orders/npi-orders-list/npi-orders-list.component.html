@@ -42,8 +42,8 @@
         <th>{{ TableColsTitle.QUANTITY }}</th>
         <th>{{ TableColsTitle.STATUS }}</th>
         <th>{{ TableColsTitle.CUSTOMER_NAME }}</th>
-        <th>{{ TableColsTitle.TARGET_DELIVERY_DATE }}</th>
         <th>{{ TableColsTitle.CURRENT_PROCESS_STEP }}</th>
+        <th>{{ TableColsTitle.TARGET_DELIVERY_DATE }}</th>
         <th>{{ TableColsTitle.PLANNED_DELIVERY_DATE }}</th>
         <th>{{ TableColsTitle.FORECAST_DELIVERY_DATE }}</th>
         <th class="col-actions">{{ TableColsTitle.ACTIONS }}</th>
@@ -64,21 +64,29 @@
           }
         </td>
         <td>{{ npiOrder.customerName }}</td>
-        <td>{{ npiOrder.targetDeliveryDate }}</td>
-
         <td>
           <p-chip
             [label]="npiOrder.currentProcessName"
-            class="chip--warn medium square"
+            class="chip--secondary medium square"
           ></p-chip>
         </td>
-
+        <td>
+          @if (npiOrder.targetDeliveryDate) {
+            <p-chip
+              [icon]="Icons.ARROW_UP_RIGHT"
+              [label]="npiOrder.targetDeliveryDate"
+              class="chip--success medium chip--square"
+            ></p-chip>
+          } @else {
+            <span class="text-secondary">—</span>
+          }
+        </td>
         <td>
           @if (npiOrder.plannedDeliveryDate) {
             <p-chip
               [icon]="Icons.CALENDAR_CLOCK"
               [label]="npiOrder.plannedDeliveryDate"
-              class="chip--primary small chip--square"
+              class="chip--primary medium chip--square"
             ></p-chip>
           } @else {
             <span class="text-secondary">—</span>
@@ -88,14 +96,9 @@
         <td>
           @if (npiOrder.forecastDeliveryDate) {
             <p-chip
-              [class]="
-                npiOrder.targetDeliveryDate &&
-                npiOrder.forecastDeliveryDate > npiOrder.targetDeliveryDate
-                  ? 'chip--warn small chip--square'
-                  : 'chip--success small chip--square'
-              "
               [icon]="Icons.CHART_LINE"
               [label]="npiOrder.forecastDeliveryDate"
+              class="chip--warn medium chip--square"
             ></p-chip>
           } @else {
             <span class="text-secondary">—</span>

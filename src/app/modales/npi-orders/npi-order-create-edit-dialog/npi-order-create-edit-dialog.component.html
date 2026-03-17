@@ -92,23 +92,50 @@
       </div>
       <div class="plan-time-hint" role="note">
         <i class="pi pi-info-circle"></i>
-        <span
-          >Estimated time (in days) allocated for each stage in the NPI
-          pipeline.</span
-        >
+        <span>Estimated time (in hours) allocated for each stage in the NPI pipeline.</span>
       </div>
       <div class="p-fields-row">
         <div class="p-field">
           <app-input-container
-            [formControlName]="NpiOrderFormField.PRODUCTION_PLAN_TIME"
-            label="Production Plan Time (days)"
+            [formControlName]="NpiOrderFormField.MATERIAL_PURCHASE_PLAN_TIME_IN_HOURS"
+            label="Material Purchase (h)"
             type="number"
           ></app-input-container>
         </div>
         <div class="p-field">
           <app-input-container
-            [formControlName]="NpiOrderFormField.TESTING_PLAN_TIME"
-            label="Testing Plan Time (days)"
+            [formControlName]="NpiOrderFormField.MATERIAL_RECEIVING_PLAN_TIME_IN_HOURS"
+            label="Material Receiving (h)"
+            type="number"
+          ></app-input-container>
+        </div>
+        <div class="p-field">
+          <app-input-container
+            [formControlName]="NpiOrderFormField.PRODUCTION_PLAN_TIME_IN_HOURS"
+            label="Production (h)"
+            type="number"
+          ></app-input-container>
+        </div>
+      </div>
+      <div class="p-fields-row">
+        <div class="p-field">
+          <app-input-container
+            [formControlName]="NpiOrderFormField.TESTING_PLAN_TIME_IN_HOURS"
+            label="Testing (h)"
+            type="number"
+          ></app-input-container>
+        </div>
+        <div class="p-field">
+          <app-input-container
+            [formControlName]="NpiOrderFormField.SHIPPING_PLAN_TIME_IN_HOURS"
+            label="Shipping (h)"
+            type="number"
+          ></app-input-container>
+        </div>
+        <div class="p-field">
+          <app-input-container
+            [formControlName]="NpiOrderFormField.CUSTOMER_APPROVAL_PLAN_TIME_IN_HOURS"
+            label="Customer Approval (h)"
             type="number"
           ></app-input-container>
         </div>

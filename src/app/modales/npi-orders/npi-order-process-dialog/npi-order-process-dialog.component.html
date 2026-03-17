@@ -26,14 +26,36 @@
         (click)="toggleHistory(line)"
         [class.history-btn--active]="historyLineUid() === line.uid"
         [icon]="Icons.HISTORY"
-        [pTooltip]="
-          historyLineUid() === line.uid ? 'Hide history' : 'Show history'
-        "
+        [pTooltip]="historyLineUid() === line.uid ? 'Hide history' : 'Show history'"
         [text]="true"
         severity="secondary"
         size="small"
         tooltipPosition="top"
       ></p-button>
+      @if (!readonly() && line.status === ProcessLineStatus.COMPLETED) {
+        <p-button
+          (click)="toggleEditMode(line)"
+          [class.history-btn--active]="editingLineUid() === line.uid"
+          [icon]="Icons.PENCIL"
+          [text]="true"
+          pTooltip="Edit"
+          severity="secondary"
+          size="small"
+          tooltipPosition="top"
+        ></p-button>
+      }
+      @if (!readonly() && line.status === ProcessLineStatus.IN_PROGRESS && (line.isProduction || line.isTesting)) {
+        <p-button
+          (click)="toggleRemainingTime(line)"
+          [class.history-btn--active]="remainingTimeLineUid() === line.uid"
+          [icon]="Icons.CLOCK"
+          [pTooltip]="remainingTimeLineUid() === line.uid ? 'Cancel' : 'Update remaining time'"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          tooltipPosition="top"
+        ></p-button>
+      }
     </div>
   </div>
 </ng-template>
@@ -276,25 +298,6 @@
         }
       }
 
-      <!-- Production / testing: remaining time -->
-      @if (
-        (line.isProduction || line.isTesting) &&
-        pendingTargetStatus() === ProcessLineStatus.IN_PROGRESS
-      ) {
-        <div class="extra-field">
-          <label>
-            Remaining Time (days)
-            <span class="required-indicator">*</span>
-          </label>
-          <p-inputNumber
-            (ngModelChange)="pendingRemainingTime = $event"
-            [min]="0"
-            [ngModel]="pendingRemainingTime"
-            placeholder="Enter remaining days"
-          ></p-inputNumber>
-        </div>
-      }
-
       <div class="extra-fields-actions">
         <p-button
           (click)="backToStatusSelection()"
@@ -309,6 +312,57 @@
           [disabled]="!canConfirmPending(line)"
           [icon]="Icons.CHECK"
           label="Confirm"
+          severity="success"
+          size="small"
+        ></p-button>
+      </div>
+    </div>
+  }
+</ng-template>
+
+<!-- =====================================================================
+     Edit (reset) panel — for completed lines
+     ===================================================================== -->
+<ng-template #editPanelTpl let-line>
+  @if (editingLineUid() === line.uid) {
+    <div class="status-change-panel">
+      <p class="panel-instruction">Reset to:</p>
+      <div class="status-options">
+        @for (status of [ProcessLineStatus.NOT_STARTED, ProcessLineStatus.IN_PROGRESS]; track status) {
+          <button
+            (click)="selectResetStatus(line, status)"
+            [class.status-option--in-progress]="status === ProcessLineStatus.IN_PROGRESS"
+            [class.status-option--not-started]="status === ProcessLineStatus.NOT_STARTED"
+            class="status-option"
+            type="button"
+          >
+            {{ status | processLineStatus }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</ng-template>
+
+<!-- =====================================================================
+     Remaining time update panel — for IN_PROGRESS production/testing lines
+     ===================================================================== -->
+<ng-template #remainingTimeTpl let-line>
+  @if (remainingTimeLineUid() === line.uid) {
+    <div class="status-change-panel">
+      <p class="panel-instruction">Update remaining time (hours):</p>
+      <div class="remaining-time-row">
+        <p-inputNumber
+          [(ngModel)]="remainingTimeInput"
+          [min]="0"
+          placeholder="Hours"
+        ></p-inputNumber>
+        <p-button
+          (click)="confirmRemainingTimeUpdate(line)"
+          [disabled]="remainingTimeInput === null"
+          [icon]="Icons.CHECK"
+          [loading]="updatingRemainingTime()"
+          label="Update"
           severity="success"
           size="small"
         ></p-button>
@@ -371,6 +425,14 @@
 
         <ng-container
           *ngTemplateOutlet="historyPanelTpl; context: { $implicit: line }"
+        ></ng-container>
+
+        <ng-container
+          *ngTemplateOutlet="editPanelTpl; context: { $implicit: line }"
+        ></ng-container>
+
+        <ng-container
+          *ngTemplateOutlet="remainingTimeTpl; context: { $implicit: line }"
         ></ng-container>
 
         @if (editableLineIndices().has(i) && !readonly()) {
