@@ -40,9 +40,9 @@
         <th>{{ TableColsTitle.WORK_ORDER_ID }}</th>
         <th>{{ TableColsTitle.PART_NUMBER }}</th>
         <th>{{ TableColsTitle.QUANTITY }}</th>
+        <th>{{ TableColsTitle.STATUS }}</th>
         <th>{{ TableColsTitle.CUSTOMER_NAME }}</th>
         <th>{{ TableColsTitle.TARGET_DELIVERY_DATE }}</th>
-        <th>{{ TableColsTitle.STATUS }}</th>
         <th>{{ TableColsTitle.CURRENT_PROCESS_STEP }}</th>
         <th class="col-actions">{{ TableColsTitle.ACTIONS }}</th>
       </tr>
@@ -53,8 +53,6 @@
         <td>{{ npiOrder.workOrderId }}</td>
         <td>{{ npiOrder.partNumber }}</td>
         <td>{{ npiOrder.quantity }}</td>
-        <td>{{ npiOrder.customerName }}</td>
-        <td>{{ npiOrder.targetDeliveryDate }}</td>
         <td>
           @if (npiOrder.status) {
             <p-tag
@@ -63,7 +61,16 @@
             />
           }
         </td>
-        <td>{{ npiOrder.currentProcessStepName }}</td>
+        <td>{{ npiOrder.customerName }}</td>
+        <td>{{ npiOrder.targetDeliveryDate }}</td>
+
+        <td>
+          <p-chip
+            [label]="npiOrder.currentProcessName"
+            class="chip--warn medium square"
+          ></p-chip>
+        </td>
+
         <td class="col-actions">
           <p-button
             (click)="editNpiOrder(npiOrder)"

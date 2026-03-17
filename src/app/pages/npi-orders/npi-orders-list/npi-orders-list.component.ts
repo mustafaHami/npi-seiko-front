@@ -15,7 +15,11 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { HandleToastMessageService } from "../../../services/handle-toast-message.service";
 import { ModalService } from "../../../services/components/modal.service";
 import { CustomTitleComponent } from "../../../components/custom-title/custom-title.component";
-import { NpiOrder, NpiOrdersPaginated, NpiOrderStatus } from "../../../../client/npiSeiko";
+import {
+  NpiOrder,
+  NpiOrdersPaginated,
+  NpiOrderStatus,
+} from "../../../../client/npiSeiko";
 import { NoDoubleClickDirective } from "../../../directives/no-double-click.directive";
 import { BaseListComponent } from "../../../models/classes/base-list-component";
 import { NpiOrderRepo } from "../../../repositories/npi-order.repo";
@@ -26,6 +30,7 @@ import { RouteId } from "../../../models/enums/routes-id";
 import { NpiOrderStatusPipe } from "../../../pipes/npi-order-status.pipe";
 import { Tag } from "primeng/tag";
 import { switchMap } from "rxjs";
+import { Chip } from "primeng/chip";
 
 @Component({
   selector: "app-npi-orders-list",
@@ -40,12 +45,16 @@ import { switchMap } from "rxjs";
     NoDoubleClickDirective,
     NpiOrderStatusPipe,
     Tag,
+    Chip,
   ],
   templateUrl: "./npi-orders-list.component.html",
   styleUrl: "./npi-orders-list.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NpiOrdersListComponent extends BaseListComponent implements OnInit {
+export class NpiOrdersListComponent
+  extends BaseListComponent
+  implements OnInit
+{
   npiOrders = signal<NpiOrder[]>([]);
 
   protected readonly TableColsTitle = TableColsTitle;

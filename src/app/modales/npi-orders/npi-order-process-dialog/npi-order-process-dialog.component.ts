@@ -12,6 +12,7 @@ import { InputNumberModule } from "primeng/inputnumber";
 import { Button } from "primeng/button";
 import { Tag } from "primeng/tag";
 import { TooltipModule } from "primeng/tooltip";
+import { TimelineModule } from "primeng/timeline";
 import { DatePipe } from "@angular/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
@@ -36,6 +37,7 @@ import { Icons } from "../../../models/enums/icons";
     Button,
     Tag,
     TooltipModule,
+    TimelineModule,
     DatePipe,
     NpiOrderProcessLinePipe,
   ],

@@ -78,41 +78,59 @@
               @if (history.length === 0) {
                 <p class="history-empty">No history recorded yet.</p>
               } @else {
-                <div class="history-timeline">
-                  @for (entry of history; track $index) {
-                    <div class="history-entry">
-                      <div class="history-entry-dot"></div>
-                      <div class="history-entry-content">
-                        <p-tag
-                          [severity]="
-                            entry.status! | processLineStatus: 'severity'
-                          "
-                          [value]="entry.status! | processLineStatus"
-                        />
-                        <div class="history-entry-dates">
-                          @if (entry.startDate) {
-                            <span>
-                              <i [class]="Icons.PLAY"></i>
-                              {{ entry.startDate | date: "dd MMM yyyy, HH:mm" }}
-                            </span>
-                          }
-                          @if (entry.endDate) {
-                            <span>
-                              <i [class]="Icons.CHECK"></i>
-                              {{ entry.endDate | date: "dd MMM yyyy, HH:mm" }}
-                            </span>
-                          }
-                        </div>
-                        @if (entry.byUser) {
-                          <span class="history-entry-user">
-                            <i [class]="Icons.USERS"></i>
-                            {{ entry.byUser.login }}
+                <p-timeline [value]="history" align="right" class="history-timeline">
+                  <ng-template #marker let-entry>
+                    <span
+                      [class.history-marker--completed]="
+                        entry.status === ProcessLineStatus.COMPLETED
+                      "
+                      [class.history-marker--in-progress]="
+                        entry.status === ProcessLineStatus.IN_PROGRESS
+                      "
+                      [class.history-marker--not-started]="
+                        entry.status === ProcessLineStatus.NOT_STARTED
+                      "
+                      class="history-marker"
+                    ></span>
+                  </ng-template>
+                  <ng-template #opposite let-entry>
+                    @if (entry.startDate) {
+                      <span class="history-date">
+                        {{ entry.startDate | date: "dd MMM yyyy" }}
+                      </span>
+                    }
+                  </ng-template>
+                  <ng-template #content let-entry>
+                    <div class="history-entry-content">
+                      <p-tag
+                        [severity]="
+                          entry.status! | processLineStatus: 'severity'
+                        "
+                        [value]="entry.status! | processLineStatus"
+                      />
+                      <div class="history-entry-dates">
+                        @if (entry.startDate) {
+                          <span>
+                            <i [class]="Icons.PLAY"></i>
+                            {{ entry.startDate | date: "HH:mm" }}
+                          </span>
+                        }
+                        @if (entry.endDate) {
+                          <span>
+                            <i [class]="Icons.CHECK" class="success"></i>
+                            {{ entry.endDate | date: "dd MMM yyyy, HH:mm" }}
                           </span>
                         }
                       </div>
+                      @if (entry.byUser) {
+                        <span class="history-entry-user">
+                          <i [class]="Icons.USERS"></i>
+                          {{ entry.byUser.login }}
+                        </span>
+                      }
                     </div>
-                  }
-                </div>
+                  </ng-template>
+                </p-timeline>
               }
             }
           </div>

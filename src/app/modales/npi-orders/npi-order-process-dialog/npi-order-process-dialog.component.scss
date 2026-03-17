@@ -225,42 +225,43 @@
 }
 
 .history-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
-  padding-left: 1.25rem;
+  margin-top: 0.25rem;
+}
 
-  &::before {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 8px;
-    bottom: 8px;
-    width: 1px;
-    background: var(--surface-border);
+// PrimeNG timeline marker override
+.history-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--surface-card);
+  flex-shrink: 0;
+
+  &--not-started {
+    background: #94a3b8;
+    box-shadow: 0 0 0 1px rgba(100, 116, 139, 0.3);
+  }
+
+  &--in-progress {
+    background: #f97316;
+    box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.3);
+  }
+
+  &--completed {
+    background: #48b461;
+    box-shadow: 0 0 0 1px rgba(72, 180, 97, 0.3);
+  }
+
+  &--aborted {
+    background: #dc3545;
+    box-shadow: 0 0 0 1px rgba(220, 53, 69, 0.3);
   }
 }
 
-.history-entry {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  position: relative;
-  padding: 0.5rem 0;
-}
-
-.history-entry-dot {
-  position: absolute;
-  left: -1.25rem;
-  top: 0.75rem;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--main-color);
-  border: 2px solid var(--surface-card);
-  box-shadow: 0 0 0 1px rgba(10, 132, 193, 0.3);
-  flex-shrink: 0;
+.history-date {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .history-entry-content {
