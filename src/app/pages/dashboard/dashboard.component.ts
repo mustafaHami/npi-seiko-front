@@ -74,10 +74,10 @@ export class DashboardComponent implements OnInit {
     this.loadDashboard();
   }
 
-  exportInProgress(): void {
+  exportOpen(): void {
     this.loaderService.showLoader("Exporting open request for quotation...");
     this.dashboardRepo
-      .exportInProgress()
+      .exportOpen()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {

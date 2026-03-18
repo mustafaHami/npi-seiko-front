@@ -24,8 +24,8 @@ export class DashboardRepo {
     ) as Observable<Dashboard>;
   }
 
-  exportInProgress() {
-    const url = `${this.npiOrderPath}/in-progress/export`;
+  exportOpen() {
+    const url = `${this.npiOrderPath}/open/export`;
     return this.http.post(url, null, {
       responseType: "blob",
       observe: "response",
