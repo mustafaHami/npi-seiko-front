@@ -89,12 +89,18 @@
       class="chip--primary small chip--square"
     ></p-chip>
     @if (
-      line.remainingTimeInHours !== null &&
-      line.remainingTimeInHours !== undefined
+      line.status === ProcessLineStatus.IN_PROGRESS &&
+      ((line.remainingTimeInHours !== null &&
+        line.remainingTimeInHours !== undefined) ||
+        (line.planTimeInHours !== null && line.planTimeInHours !== undefined))
     ) {
       <p-chip
         [icon]="Icons.CLOCK"
-        [label]="'Remaining: ' + line.remainingTimeInHours + ' h'"
+        [label]="
+          'Remaining: ' +
+          (line.remainingTimeInHours ?? line.planTimeInHours) +
+          ' h'
+        "
         class="chip--warn small chip--square"
       ></p-chip>
     }

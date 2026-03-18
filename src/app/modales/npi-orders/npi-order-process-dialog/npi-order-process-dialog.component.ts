@@ -140,14 +140,14 @@ export class NpiOrderProcessDialogComponent
     ProcessLineStatus.IN_PROGRESS,
     ProcessLineStatus.COMPLETED,
   ];
-  protected npiService = inject(NpiService);
+  protected excelUtils = inject(ExcelUtilsService);
+  private npiOrderRepo = inject(NpiOrderRepo);
+  private npiService = inject(NpiService);
   readonly = computed(() => {
     const status = this.npiOrder()?.status;
     if (!status) return true;
     return this.npiService.isFinalOrder(status!);
   });
-  protected excelUtils = inject(ExcelUtilsService);
-  private npiOrderRepo = inject(NpiOrderRepo);
   private processLineStatusPipe = inject(NpiOrderProcessLinePipe);
 
   availableStatuses(line: ProcessLine): ProcessLineStatus[] {
@@ -318,7 +318,8 @@ export class NpiOrderProcessDialogComponent
       this.clearPending();
       this.editingLineUid.set(null);
       this.remainingTimeLineUid.set(uid);
-      this.remainingTimeInput = line.remainingTimeInHours ?? null;
+      this.remainingTimeInput =
+        line.remainingTimeInHours ?? line.planTimeInHours ?? null;
     }
   }
 
@@ -469,9 +470,6 @@ export class NpiOrderProcessDialogComponent
     targetStatus: ProcessLineStatus,
     updatedLines: ProcessLine[],
   ): void {
-    this.handleMessage.successMessage(
-      `${line.processName} updated to ${this.processLineStatusPipe.transform(targetStatus)}`,
-    );
     const current = this.process();
     if (current) {
       this.process.set({ ...current, lines: updatedLines });
@@ -481,8 +479,12 @@ export class NpiOrderProcessDialogComponent
       (l) => l.status === ProcessLineStatus.COMPLETED,
     );
     if (allCompleted) {
-      this.handleMessage.successMessage("NPI process completed!");
+      this.handleMessage.successMessage("NPI process completed.");
       this.closeDialog(true);
+    } else {
+      this.handleMessage.successMessage(
+        `${line.processName} updated to ${this.processLineStatusPipe.transform(targetStatus)}`,
+      );
     }
   }
 
@@ -568,6 +570,13 @@ export class NpiOrderProcessDialogComponent
         next: (result) =>
           this.handleStatusUpdateSuccess(line, targetStatus, result),
       });
+  }
+
+  private finalStatus(status: ProcessLineStatus) {
+    return (
+      status === ProcessLineStatus.COMPLETED ||
+      status === ProcessLineStatus.ABORTED
+    );
   }
 
   private loadProcess(): void {
