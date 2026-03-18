@@ -1,10 +1,10 @@
-import { DestroyRef, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
-import { catchError, EMPTY, firstValueFrom, switchMap, timer } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { MessageService } from 'primeng/api';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SKIP_ERROR_TOAST } from '../configs/interceptors/http-context-tokens';
+import { DestroyRef, Injectable, signal } from "@angular/core";
+import { HttpClient, HttpContext } from "@angular/common/http";
+import { catchError, EMPTY, firstValueFrom, switchMap, timer } from "rxjs";
+import { environment } from "../../environments/environment";
+import { MessageService } from "primeng/api";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SKIP_ERROR_TOAST } from "../configs/interceptors/http-context-tokens";
 
 interface AppConfig {
   apiUrl: string;
@@ -13,7 +13,7 @@ interface AppConfig {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class ConfigService {
   private currentVersion: string | null = null;
@@ -29,6 +29,7 @@ export class ConfigService {
     const configObject: AppConfig = await firstValueFrom(this.loadAppConfig());
     environment.backendUrl = configObject.apiUrl;
     this.currentVersion = configObject.version;
+    this.backendUp.set(true);
     this.initVersion();
     this.openBroadcastForReload();
   }
@@ -38,11 +39,11 @@ export class ConfigService {
   }
 
   openBroadcastForReload() {
-    const channel = new BroadcastChannel('app_channel');
+    const channel = new BroadcastChannel("app_channel");
 
     channel.onmessage = (msg) => {
-      if (msg.data === 'reload') {
-        console.debug('Reload received from another tab');
+      if (msg.data === "reload") {
+        console.debug("Reload received from another tab");
         location.reload();
       }
     };
@@ -86,25 +87,25 @@ export class ConfigService {
   private loadAppConfig() {
     return this.http
       .get<AppConfig>(environment.configUrlPath, {
-        headers: { 'Cache-Control': 'no-cache' },
+        headers: { "Cache-Control": "no-cache" },
         context: new HttpContext().set(SKIP_ERROR_TOAST, true),
       })
       .pipe(
         catchError((err) => {
-          console.error('Error reloading config file', err);
+          console.error("Error reloading config file", err);
           return EMPTY;
         }),
       );
   }
 
   private notifyUser() {
-    this.messageService.clear('updateToast');
+    this.messageService.clear("updateToast");
     if (this.backendUp()) {
       this.messageService.add({
-        key: 'updateToast',
-        severity: 'info',
-        summary: 'New version available!',
-        detail: 'Click on this message to load the new version',
+        key: "updateToast",
+        severity: "info",
+        summary: "New version available!",
+        detail: "Click on this message to load the new version",
         sticky: true,
         closable: false,
       });
