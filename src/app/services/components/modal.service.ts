@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
-import { NpiOrder } from "../../../client/npiSeiko";
+import { FileInfo, NpiOrder } from "../../../client/npiSeiko";
 import { Observable, race, take } from "rxjs";
 import { map } from "rxjs/operators";
 import { FileSelected } from "../../components/manage-file/manage-file.component";
 import { ManagePreviewFileComponent } from "../../components/manage-preview-file/manage-preview-file.component";
 import { NpiOrderCreateEditDialogComponent } from "../../modales/npi-orders/npi-order-create-edit-dialog/npi-order-create-edit-dialog.component";
 import { NpiOrderProcessDialogComponent } from "../../modales/npi-orders/npi-order-process-dialog/npi-order-process-dialog.component";
+import { ManageFileDialogComponent } from "../../components/manage-file-dialog/manage-file-dialog.component";
 
 @Injectable({
   providedIn: "root",
@@ -15,6 +16,31 @@ export class ModalService {
   ref: DynamicDialogRef | undefined | null;
 
   constructor(private dialogService: DialogService) {}
+
+  showManageFileModal(
+    defaultUrl: string,
+    files?: FileInfo[],
+    onlyDownloadable: boolean = false,
+    showDownloadBtn: boolean = true,
+    showGlobalDownloadBtn: boolean = true,
+  ) {
+    this.ref = this.dialogService.open(ManageFileDialogComponent, {
+      header: "Manage Files",
+      draggable: false,
+      modal: true,
+      closable: false,
+      resizable: false,
+      width: "70%",
+      data: {
+        defaultUrl: defaultUrl,
+        files: files || [],
+        onlyDownloadable: onlyDownloadable,
+        showDownloadBtn: showDownloadBtn,
+        showGlobalDownloadBtn: showGlobalDownloadBtn,
+      },
+    });
+    return this.waitForDialogResult<FileInfo[] | undefined>(this.ref);
+  }
 
   showPreviewFileDialog(fileSelected: FileSelected, downloadFileUrl: string) {
     this.ref = this.dialogService.open(ManagePreviewFileComponent, {

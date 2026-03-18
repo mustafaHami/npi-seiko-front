@@ -16,7 +16,7 @@ import { Chip } from "primeng/chip";
 import { TooltipModule } from "primeng/tooltip";
 import { TimelineModule } from "primeng/timeline";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { finalize, switchMap, tap } from "rxjs";
+import { finalize, Observable, switchMap, tap } from "rxjs";
 import {
   FileInfo,
   NpiOrder,
@@ -38,6 +38,7 @@ import { ExcelUtilsService } from "../../../services/utils/excel-utils.service";
 import { environment } from "../../../../environments/environment";
 import { RegexPatterns } from "../../../services/utils/regex-patterns";
 import { NoDoubleClickDirective } from "../../../directives/no-double-click.directive";
+import { ModalService } from "../../../services/components/modal.service";
 
 @Component({
   selector: "app-npi-order-process-dialog",
@@ -142,6 +143,7 @@ export class NpiOrderProcessDialogComponent
   ];
   protected excelUtils = inject(ExcelUtilsService);
   private npiOrderRepo = inject(NpiOrderRepo);
+  private modalService = inject(ModalService);
   private npiService = inject(NpiService);
   readonly = computed(() => {
     const status = this.npiOrder()?.status;
@@ -445,6 +447,20 @@ export class NpiOrderProcessDialogComponent
   public closeRemainingTimeEditor(): void {
     this.remainingTimeLineUid.set(null);
     this.remainingTimeInput = null;
+  }
+
+  manageFilesForNpiProcessLine(
+    npiOrder: NpiOrder,
+    line: ProcessLine,
+  ): Observable<FileInfo[] | undefined> {
+    const url = `${environment.backendUrl}/npi-orders/${npiOrder.uid}/process/lines/${line.uid}`;
+    return this.npiOrderRepo
+      .getAllNpiOrdersProcessLineFiles(npiOrder.uid, line.uid!)
+      .pipe(
+        switchMap((files) =>
+          this.modalService.showManageFileModal(url, files, true, true),
+        ),
+      );
   }
 
   private clearPending(): void {
