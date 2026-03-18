@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
-import { FileInfo, NpiOrder } from "../../../client/npiSeiko";
+import { FileInfo, NpiOrder, User } from "../../../client/npiSeiko";
 import { Observable, race, take } from "rxjs";
 import { map } from "rxjs/operators";
 import { FileSelected } from "../../components/manage-file/manage-file.component";
@@ -8,6 +8,7 @@ import { ManagePreviewFileComponent } from "../../components/manage-preview-file
 import { NpiOrderCreateEditDialogComponent } from "../../modales/npi-orders/npi-order-create-edit-dialog/npi-order-create-edit-dialog.component";
 import { NpiOrderProcessDialogComponent } from "../../modales/npi-orders/npi-order-process-dialog/npi-order-process-dialog.component";
 import { ManageFileDialogComponent } from "../../components/manage-file-dialog/manage-file-dialog.component";
+import { UserCreateEditDialogComponent } from "../../modales/admin/user-create-edit-dialog/user-create-edit-dialog.component";
 
 @Injectable({
   providedIn: "root",
@@ -16,6 +17,22 @@ export class ModalService {
   ref: DynamicDialogRef | undefined | null;
 
   constructor(private dialogService: DialogService) {}
+
+  showUserCreateEditModal(editMode: boolean, user?: User) {
+    this.ref = this.dialogService.open(UserCreateEditDialogComponent, {
+      header: `${editMode ? "Edit" : "Create"} user`,
+      draggable: false,
+      modal: true,
+      closable: true,
+      resizable: false,
+      width: "55%",
+      data: {
+        editMode: editMode,
+        user: user,
+      },
+    });
+    return this.waitForDialogResult<boolean>(this.ref);
+  }
 
   showManageFileModal(
     defaultUrl: string,

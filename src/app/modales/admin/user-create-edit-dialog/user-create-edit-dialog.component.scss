@@ -1,0 +1,29 @@
+.user-header-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+
+  .user-types {
+    width: 48%;
+  }
+
+  .user-active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      margin-right: 0.625rem;
+    }
+  }
+}
+
+form {
+  margin-top: 1.25rem;
+}
+
+.password-card-filed {
+  width: 100%;
+  margin-bottom: 1rem;
+}

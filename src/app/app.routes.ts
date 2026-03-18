@@ -54,6 +54,15 @@ export const routes: Routes = [
       ),
     canActivate: [() => inject(AuthGuardService).canActivate()],
   },
+  {
+    path: RoutingService.getRouteEnv(RouteId.ADMIN).path,
+    loadChildren: () =>
+      import("./pages/admin/admin.routes").then((m) => m.adminRoutes),
+    canActivate: [
+      () => inject(AuthGuardService).canActivate(),
+      () => inject(RoleGuard).canActivate(RouteId.ADMIN),
+    ],
+  },
   // WILDCARD: MUST BE LAST ROUTE IN THE LIST
   {
     path: "**",

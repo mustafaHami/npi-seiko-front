@@ -9,8 +9,9 @@ import {
 } from "@angular/forms";
 import { NpiOrderFormField } from "../../models/enums/form-field-names/npi-order-form-field";
 import { recordToMap } from "../../models/recordToMap";
-import { NpiOrder } from "../../../client/npiSeiko";
+import { NpiOrder, UserRole, UserType } from "../../../client/npiSeiko";
 import { DateFormField } from "../../models/enums/date-form-field";
+import { UserFormField } from "../../models/enums/form-field-names/user-form-field";
 
 @Injectable({
   providedIn: "root",
@@ -32,6 +33,34 @@ export class FormService {
         }
       }
     });
+  }
+
+  buildUserForm(type: UserType, form?: FormGroup): FormGroup {
+    let role = null;
+    if (form) {
+      role = form.get(UserFormField.ROLE)?.value ?? "";
+    }
+    const formGroup: FormGroup = this.fb.group({
+      [UserFormField.ROLE]: new FormControl<UserRole | null>(role, [
+        Validators.required,
+      ]),
+    });
+    if (type === UserType.USERNAME) {
+      formGroup.addControl(
+        UserFormField.USERNAME,
+        new FormControl<string>("", [Validators.required]),
+      );
+      formGroup.addControl(
+        UserFormField.PASSWORD,
+        new FormControl<string>("", [Validators.required]),
+      );
+    } else {
+      formGroup.addControl(
+        UserFormField.EMAIL,
+        new FormControl<string>("", [Validators.required, Validators.email]),
+      );
+    }
+    return formGroup;
   }
 
   buildDateForm() {

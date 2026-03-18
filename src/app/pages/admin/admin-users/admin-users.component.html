@@ -1,0 +1,111 @@
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="card-header">
+      <app-custom-title [title]="title"></app-custom-title>
+    </div>
+  </ng-template>
+  <p-table
+    (onLazyLoad)="loadData($event)"
+    [lazy]="true"
+    [loading]="loading"
+    [paginator]="true"
+    [resizableColumns]="true"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [rows]="maxRowDefault"
+    [totalRecords]="totalRecords"
+    [value]="users"
+    class="app-table"
+    dataKey="uid"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-caption">
+        <div class="caption-action-button">
+          <app-search-input
+            (eventSearchValidate)="activateSearch($event)"
+          ></app-search-input>
+          <p-selectButton
+            (onChange)="filterChanged()"
+            [(ngModel)]="activeFilterSelected"
+            [allowEmpty]="false"
+            [options]="allActiveFilters"
+            class="status-filter inactive-variant"
+            optionLabel="label"
+            optionValue="value"
+          ></p-selectButton>
+        </div>
+        <div class="caption-action-button">
+          <p-button
+            (click)="createUser()"
+            [icon]="Icons.PLUS"
+            [raised]="true"
+            label="User"
+            severity="primary"
+          ></p-button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ TableColsTitle.LOGIN }}</th>
+        <th>{{ TableColsTitle.ROLE }}</th>
+        <th>{{ TableColsTitle.TYPE }}</th>
+        <th class="col-actions">{{ TableColsTitle.ACTIONS }}</th>
+        <th class="col-center">{{ TableColsTitle.ACTIVE }}</th>
+      </tr>
+    </ng-template>
+    <ng-template let-ri="rowIndex" let-user pTemplate="body">
+      <tr>
+        <td class="text-bold">
+          {{ user.login }}
+        </td>
+        <td>
+          {{ user.role | userRole }}
+        </td>
+        <td>
+          {{ user.type | userType }}
+        </td>
+        <td class="col-actions">
+          <p-button
+            (click)="editUser(user)"
+            [icon]="Icons.PENCIL"
+            [text]="true"
+            pTooltip="Manage"
+            tooltipPosition="top"
+          >
+          </p-button>
+          @if (user.type === UserType.EMAIL_ADDRESS && !user.registeredEmail) {
+            <p-button
+              (onClick)="resendValidationEmail(user)"
+              [delay]="2000"
+              [icon]="Icons.SEND"
+              [text]="true"
+              appNoDoubleClick
+              pTooltip="Resend validation  email"
+              tooltipPosition="top"
+            >
+            </p-button>
+          }
+        </td>
+        <td class="col-center">
+          <p-checkbox
+            (onChange)="
+              !cannotDeactivateOneself(user.login) &&
+                activateUser(user.active, user)
+            "
+            [(ngModel)]="user.active"
+            [binary]="true"
+            [disabled]="cannotDeactivateOneself(user.login)"
+            class="success size-medium"
+            inputId="binary"
+          />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr class="p-datatable-emptymessage">
+        <td colspan="10">No data</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

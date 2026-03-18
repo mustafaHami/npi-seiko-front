@@ -40,4 +40,20 @@ export const routeEnvironment: RouteEnv[] = [
     isPrincipal: true,
     title: "NPI Orders",
   },
+  {
+    id: RouteId.ADMIN,
+    path: "administration",
+    enable: true,
+    isPrincipal: true,
+    title: "Admin",
+    children: [
+      {
+        id: RouteId.ADMIN_USERS,
+        path: "users",
+        title: "Users",
+        detailBackLink: RouteId.ADMIN,
+        enable: true,
+      },
+    ],
+  },
 ];

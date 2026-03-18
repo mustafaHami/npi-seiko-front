@@ -7,16 +7,6 @@ import { UserRole } from "../../../client/npiSeiko";
 export class UserRolePipe implements PipeTransform {
   transform(value: UserRole): string {
     switch (value) {
-      case UserRole.PROJECT_MANAGER:
-        return "Project Manager";
-      case UserRole.ENGINEERING:
-        return "Engineering";
-      case UserRole.MANAGEMENT:
-        return "Management";
-      case UserRole.PLANNING:
-        return "Planning";
-      case UserRole.PROCUREMENT:
-        return "Procurement";
       case UserRole.ADMINISTRATOR:
         return "Administrator";
       case UserRole.SUPER_ADMINISTRATOR:
