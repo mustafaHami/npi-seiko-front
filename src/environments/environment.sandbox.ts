@@ -9,6 +9,6 @@ export const environment = {
   userLoginKey: "sandboxNpiSdUserLoginKey",
   userId: "sandboxNpiSdUserId",
   routes: routeEnvironment,
-  configUrlPath: "/cost-sd/assets/config.json",
+  configUrlPath: "/npi-sd/assets/config.json",
   email: "",
 };
