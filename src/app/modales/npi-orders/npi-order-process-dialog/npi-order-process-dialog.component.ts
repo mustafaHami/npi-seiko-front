@@ -96,6 +96,18 @@ export class NpiOrderProcessDialogComponent
     | "ABORT_NPI"
     | null = null;
 
+  /** Minimum date for material delivery date: today */
+  readonly minDeliveryDate: Date = new Date();
+
+  /** Minimum date for shipping date: max(materialLatestDeliveryDate, today) */
+  minShippingDateProcess = signal<Date | null>(null);
+
+  /** Minimum date for starting customer approval: shippingDate from the shipment line */
+  minStartingCustomerApprovalDate = signal<Date | null>(null);
+
+  /** Minimum date for approval customer date: startingCustomerApprovalDate from the customer approval line */
+  minApprovalCustomerDate = signal<Date | null>(null);
+
   /** UID of the line currently in edit (reset) mode */
   editingLineUid = signal<string | null>(null);
 
@@ -263,6 +275,7 @@ export class NpiOrderProcessDialogComponent
     this.importSheetDisplay = 1;
     this.importColumnDisplay = 1;
     this.importRowDisplay = 1;
+    this.resolvePendingMinDates(line, status);
   }
 
   confirmPendingUpdate(line: ProcessLine): void {
@@ -320,6 +333,7 @@ export class NpiOrderProcessDialogComponent
       this.pendingApprovalCustomerDate = null;
       this.pendingCustomerApprovalDecision = null;
       this.pendingCustomerApprovalNoAction = null;
+      this.resolvePendingMinDates(line, status);
       return;
     }
     this.editingLineUid.set(null);
@@ -507,6 +521,48 @@ export class NpiOrderProcessDialogComponent
     this.manageFilesForNpiProcessLine(this.npiOrder()!, line)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
+  }
+
+  /**
+   * Resolves the appropriate minDate signals based on which line/status
+   * is entering the extra-fields step.
+   */
+  private resolvePendingMinDates(
+    line: ProcessLine,
+    targetStatus: ProcessLineStatus,
+  ): void {
+    if (line.isShipment && targetStatus === ProcessLineStatus.COMPLETED) {
+      this.minShippingDateProcess.set(this.getMaterialDeliveryDateFromProcess());
+    }
+    if (
+      line.isCustomerApproval &&
+      targetStatus === ProcessLineStatus.IN_PROGRESS
+    ) {
+      this.minStartingCustomerApprovalDate.set(
+        this.getShippingDateFromProcess(),
+      );
+    }
+    if (
+      line.isCustomerApproval &&
+      targetStatus === ProcessLineStatus.COMPLETED
+    ) {
+      const raw = line.startingCustomerApprovalDate;
+      this.minApprovalCustomerDate.set(raw ? new Date(raw) : null);
+    }
+  }
+
+  private getMaterialDeliveryDateFromProcess(): Date {
+    const materialLine = this.process()?.lines.find((l) => l.isMaterialPurchase);
+    const today = new Date();
+    if (!materialLine?.materialLatestDeliveryDate) return today;
+    const deliveryDate = new Date(materialLine.materialLatestDeliveryDate);
+    return deliveryDate > today ? deliveryDate : today;
+  }
+
+  private getShippingDateFromProcess(): Date | null {
+    const shipmentLine = this.process()?.lines.find((l) => l.isShipment);
+    if (!shipmentLine?.shippingDate) return null;
+    return new Date(shipmentLine.shippingDate);
   }
 
   private clearPending(): void {

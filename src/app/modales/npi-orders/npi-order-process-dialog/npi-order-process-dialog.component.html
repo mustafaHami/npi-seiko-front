@@ -260,6 +260,7 @@
             </label>
             <p-datePicker
               (ngModelChange)="pendingLatestDeliveryDate = $event"
+              [minDate]="minDeliveryDate"
               [ngModel]="pendingLatestDeliveryDate"
               appendTo="body"
               dateFormat="yy-mm-dd"
@@ -390,6 +391,7 @@
           </label>
           <p-datePicker
             (ngModelChange)="pendingShippingDate = $event"
+            [minDate]="minShippingDateProcess()"
             [ngModel]="pendingShippingDate"
             appendTo="body"
             dateFormat="yy-mm-dd"
@@ -410,6 +412,7 @@
           </label>
           <p-datePicker
             (ngModelChange)="pendingStartingCustomerApprovalDate = $event"
+            [minDate]="minStartingCustomerApprovalDate()"
             [ngModel]="pendingStartingCustomerApprovalDate"
             appendTo="body"
             dateFormat="yy-mm-dd"
@@ -438,7 +441,7 @@
               class="status-option"
               type="button"
             >
-              YES
+              Passed
             </button>
             <button
               (click)="selectCustomerApprovalDecision('NO')"
@@ -449,7 +452,7 @@
               class="status-option"
               type="button"
             >
-              NO
+              Failed
             </button>
           </div>
         </div>
@@ -462,6 +465,7 @@
             </label>
             <p-datePicker
               (ngModelChange)="pendingApprovalCustomerDate = $event"
+              [minDate]="minApprovalCustomerDate()"
               [ngModel]="pendingApprovalCustomerDate"
               appendTo="body"
               dateFormat="yy-mm-dd"
