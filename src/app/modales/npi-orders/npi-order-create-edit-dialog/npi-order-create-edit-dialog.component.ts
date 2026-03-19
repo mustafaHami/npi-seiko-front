@@ -15,6 +15,7 @@ import { DatePickerModule } from "primeng/datepicker";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
   Customer,
+  FileInfo,
   NpiOrder,
   NpiOrderCreate,
   NpiOrderUpdate,
@@ -28,6 +29,9 @@ import { NpiService } from "../../../services/npi.service";
 import { RegexPatterns } from "../../../services/utils/regex-patterns";
 import { Select } from "primeng/select";
 import { CustomerRepo } from "../../../repositories/customer.repo";
+import { OverlayBadge } from "primeng/overlaybadge";
+import { environment } from "../../../../environments/environment";
+import { ModalService } from "../../../services/components/modal.service";
 
 @Component({
   selector: "app-npi-order-create-edit-dialog",
@@ -41,6 +45,7 @@ import { CustomerRepo } from "../../../repositories/customer.repo";
     DatePickerModule,
     InputContainerComponent,
     Select,
+    OverlayBadge,
   ],
   templateUrl: "./npi-order-create-edit-dialog.component.html",
   styleUrl: "./npi-order-create-edit-dialog.component.scss",
@@ -54,6 +59,7 @@ export class NpiOrderCreateEditDialogComponent
   npiOrderSelected = signal<NpiOrder | null>(null);
   npiOrderForm = this.formService.buildNpiOrderForm();
   customers = signal<Customer[]>([]);
+  filesInfo = signal<FileInfo[]>([]);
 
   protected readonly Icons = Icons;
   protected readonly NpiOrderFormField = NpiOrderFormField;
@@ -65,6 +71,7 @@ export class NpiOrderCreateEditDialogComponent
     if (!status) return false;
     return !this.npiService.isUpdatable(status!);
   });
+  private modalService = inject(ModalService);
 
   ngOnInit(): void {
     if (this.config.data) {
@@ -80,6 +87,35 @@ export class NpiOrderCreateEditDialogComponent
       }
     }
     this.loadCustomers();
+    if (this.editMode()) {
+      this.loadFiles();
+    }
+  }
+
+  manageFiles() {
+    let url = `${environment.backendUrl}/temporary-files`;
+    if (this.editMode()) {
+      url = `${environment.backendUrl}/npi-orders/${this.npiOrderSelected()?.uid}/files`;
+    }
+    this.modalService
+      .showManageFileModal(url, this.filesInfo(), this.readonly(), true, false)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((returnedFiles?: FileInfo[]) => {
+        if (returnedFiles) {
+          this.filesInfo.set(returnedFiles);
+        }
+      });
+  }
+
+  loadFiles() {
+    this.npiOrderRepo
+      .getAllNpiOrdersFiles(this.npiOrderSelected()?.uid!)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((returnedFiles?: FileInfo[]) => {
+        if (returnedFiles) {
+          this.filesInfo.set(returnedFiles);
+        }
+      });
   }
 
   loadCustomers() {
@@ -116,8 +152,13 @@ export class NpiOrderCreateEditDialogComponent
   }
 
   private createNpiOrder(): void {
+    const body = this.buildBody();
+    if (!body) return;
+    if (this.filesInfo() && this.filesInfo().length > 0) {
+      body.filesIds = this.filesInfo().map((file) => file.uid);
+    }
     this.npiOrderRepo
-      .createNpiOrder(this.buildBody())
+      .createNpiOrder(body)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

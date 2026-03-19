@@ -157,17 +157,38 @@
         </div>
       </div>
     </div>
-
+  </form>
+  <div class="modal-actions-footer-end">
     @if (!readonly()) {
       <p-button
         (click)="submit()"
         [disabled]="npiOrderForm.invalid"
         [icon]="Icons.CHECK"
         [label]="editMode() ? 'Update' : 'Create'"
-        class="modal-btn"
         severity="success"
         type="submit"
       ></p-button>
     }
-  </form>
+    <p-overlay-badge
+      [value]="filesInfo().length > 0 ? filesInfo().length.toString() : '0'"
+      severity="info"
+    >
+      <p-button
+        (click)="manageFiles()"
+        [icon]="Icons.FOLDER"
+        [outlined]="true"
+        label="Manage Files"
+        severity="secondary"
+        type="button"
+      ></p-button>
+    </p-overlay-badge>
+    <p-button
+      (click)="closeDialog(false)"
+      [icon]="Icons.TIMES"
+      [outlined]="true"
+      label="Cancel"
+      severity="secondary"
+      type="button"
+    ></p-button>
+  </div>
 </p-card>

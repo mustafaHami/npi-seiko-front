@@ -54,7 +54,7 @@ export class ModalService {
   showUserCreateEditModal(editMode: boolean, user?: User) {
     this.ref = this.dialogService.open(UserCreateEditDialogComponent, {
       header: `${editMode ? "Edit" : "Create"} user`,
-      draggable: false,
+      draggable: true,
       modal: true,
       closable: true,
       resizable: false,
@@ -73,11 +73,11 @@ export class ModalService {
     onlyDownloadable: boolean = false,
     showDownloadBtn: boolean = true,
     showGlobalDownloadBtn: boolean = true,
-    multiple: boolean = false,
+    multiple: boolean = true,
   ) {
     this.ref = this.dialogService.open(ManageFileDialogComponent, {
       header: "Manage Files",
-      draggable: false,
+      draggable: true,
       modal: true,
       closable: false,
       resizable: false,
@@ -117,7 +117,7 @@ export class ModalService {
   showNpiOrderCreateEditModal(editMode: boolean, npiOrder?: NpiOrder) {
     this.ref = this.dialogService.open(NpiOrderCreateEditDialogComponent, {
       header: `${editMode ? "Edit" : "Create"} NPI Order`,
-      draggable: false,
+      draggable: true,
       modal: true,
       closable: true,
       resizable: false,
@@ -133,7 +133,7 @@ export class ModalService {
   showNpiOrderProcessModal(npiOrder: NpiOrder) {
     this.ref = this.dialogService.open(NpiOrderProcessDialogComponent, {
       header: `Process${npiOrder.purchaseOrderNumber ? ` — ${npiOrder.purchaseOrderNumber}` : ""}`,
-      draggable: false,
+      draggable: true,
       modal: true,
       closable: true,
       resizable: false,

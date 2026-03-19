@@ -128,10 +128,8 @@ export class NpiOrdersListComponent
         ),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((updated?: boolean) => {
-        if (updated) {
-          this.loadData(this.lastTableLazyLoadEvent);
-        }
+      .subscribe(() => {
+        this.loadData(this.lastTableLazyLoadEvent);
       });
   }
 
@@ -175,14 +173,7 @@ export class NpiOrdersListComponent
       .getAllNpiOrdersFiles(npiOrder.uid)
       .pipe(
         switchMap((files) =>
-          this.modalService.showManageFileModal(
-            url,
-            files,
-            false,
-            true,
-            true,
-            true,
-          ),
+          this.modalService.showManageFileModal(url, files, false, true, true),
         ),
         takeUntilDestroyed(this.destroyRef),
       )

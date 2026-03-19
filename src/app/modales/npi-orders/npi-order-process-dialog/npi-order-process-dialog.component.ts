@@ -472,7 +472,7 @@ export class NpiOrderProcessDialogComponent
       .getAllNpiOrdersProcessLineFiles(npiOrder.uid, line.uid!)
       .pipe(
         switchMap((files) =>
-          this.modalService.showManageFileModal(url, files, true, true),
+          this.modalService.showManageFileModal(url, files, true, true, false),
         ),
       );
   }
