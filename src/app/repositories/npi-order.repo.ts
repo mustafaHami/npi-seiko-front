@@ -23,6 +23,16 @@ import { fromRequest } from "../services/utils/api-utils";
 export class NpiOrderRepo {
   constructor(private npiOrderService: NpiOrderSdk) {}
 
+  getAllNpiOrdersFiles(npiUid: string): Observable<any[]> {
+    return fromRequest(
+      this.npiOrderService.getAllNpiOrdersFiles({
+        path: {
+          uid: npiUid,
+        },
+      }),
+    );
+  }
+
   getAllNpiOrdersProcessLineFiles(
     npiUid: string,
     lineUid: string,

@@ -171,9 +171,21 @@ export class NpiOrdersListComponent
 
   manageNpiOrderFiles(npiOrder: NpiOrder): void {
     const url = `${environment.backendUrl}/npi-orders/${npiOrder.uid}/files`;
-    this.modalService
-      .showManageFileModal(url, undefined, false, true, true)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.npiOrderRepo
+      .getAllNpiOrdersFiles(npiOrder.uid)
+      .pipe(
+        switchMap((files) =>
+          this.modalService.showManageFileModal(
+            url,
+            files,
+            false,
+            true,
+            true,
+            true,
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe(() => {
         this.loadData(this.lastTableLazyLoadEvent);
       });
