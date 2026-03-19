@@ -7,10 +7,10 @@ export enum NpiOrderFormField {
   TARGET_DELIVERY_DATE = "targetDeliveryDate",
   CUSTOMER = "customer",
   PRODUCT_NAME = "productName",
-  MATERIAL_PURCHASE_PLAN_TIME_IN_DAYS = "materialPurchasePlanTimeInDays",
+  MATERIAL_PURCHASE_ESTIMATED_DATE = "materialPurchaseEstimatedDate",
   MATERIAL_RECEIVING_PLAN_TIME_IN_DAYS = "materialReceivingPlanTimeInDays",
   PRODUCTION_PLAN_TIME_IN_DAYS = "productionPlanTimeInDays",
   TESTING_PLAN_TIME_IN_DAYS = "testingPlanTimeInDays",
-  SHIPPING_PLAN_TIME_IN_DAYS = "shippingPlanTimeInDays",
-  CUSTOMER_APPROVAL_PLAN_TIME_IN_DAYS = "customerApprovalPlanTimeInDays",
+  SHIPPING_ESTIMATED_DATE = "shippingEstimatedDate",
+  CUSTOMER_APPROVAL_ESTIMATED_DATE = "customerApprovalEstimatedDate",
 }

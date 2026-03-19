@@ -106,33 +106,41 @@
       <div class="plan-time-hint" role="note">
         <i class="pi pi-info-circle"></i>
         <span
-          >Estimated time (in hours) allocated for each stage in the NPI
-          pipeline.</span
+          >Set the estimated date for Material Purchase, then the duration (in
+          working days) for Receiving, Production, and Testing. Weekends are
+          excluded from the calculation. Shipping and Customer Approval dates
+          are constrained by the preceding stages.</span
         >
       </div>
       <div class="p-fields-row">
         <div class="p-field">
-          <app-input-container
+          <label
+            >Material Purchase Date
+            <span class="required-indicator">*</span></label
+          >
+          <p-datePicker
             [formControlName]="
-              NpiOrderFormField.MATERIAL_PURCHASE_PLAN_TIME_IN_DAYS
+              NpiOrderFormField.MATERIAL_PURCHASE_ESTIMATED_DATE
             "
-            label="Material Purchase (days)"
-            type="number"
-          ></app-input-container>
+            [minDate]="minMaterialPurchaseDate()"
+            appendTo="body"
+            dateFormat="yy-mm-dd"
+            placeholder="Select purchase date"
+          ></p-datePicker>
         </div>
         <div class="p-field">
           <app-input-container
             [formControlName]="
               NpiOrderFormField.MATERIAL_RECEIVING_PLAN_TIME_IN_DAYS
             "
-            label="Material Receiving (days)"
+            label="Material lead time (days)"
             type="number"
           ></app-input-container>
         </div>
         <div class="p-field">
           <app-input-container
             [formControlName]="NpiOrderFormField.PRODUCTION_PLAN_TIME_IN_DAYS"
-            label="Production (days)"
+            label="Production estimate time (days)"
             type="number"
           ></app-input-container>
         </div>
@@ -141,25 +149,36 @@
         <div class="p-field">
           <app-input-container
             [formControlName]="NpiOrderFormField.TESTING_PLAN_TIME_IN_DAYS"
-            label="Testing (days)"
+            label="Testing time (days)"
             type="number"
           ></app-input-container>
         </div>
         <div class="p-field">
-          <app-input-container
-            [formControlName]="NpiOrderFormField.SHIPPING_PLAN_TIME_IN_DAYS"
-            label="Shipping (days)"
-            type="number"
-          ></app-input-container>
+          <label>Shipping date <span class="required-indicator">*</span></label>
+          <p-datePicker
+            [disabled]="shippingDateDisabled()"
+            [formControlName]="NpiOrderFormField.SHIPPING_ESTIMATED_DATE"
+            [minDate]="minShippingDate()"
+            appendTo="body"
+            dateFormat="yy-mm-dd"
+            placeholder="Fill upstream fields first"
+          ></p-datePicker>
         </div>
         <div class="p-field">
-          <app-input-container
+          <label
+            >Customer approval estimated date
+            <span class="required-indicator">*</span></label
+          >
+          <p-datePicker
+            [disabled]="customerApprovalDateDisabled()"
             [formControlName]="
-              NpiOrderFormField.CUSTOMER_APPROVAL_PLAN_TIME_IN_DAYS
+              NpiOrderFormField.CUSTOMER_APPROVAL_ESTIMATED_DATE
             "
-            label="Customer Approval (days)"
-            type="number"
-          ></app-input-container>
+            [minDate]="minCustomerApprovalDate()"
+            appendTo="body"
+            dateFormat="yy-mm-dd"
+            placeholder="Select shipping date first"
+          ></p-datePicker>
         </div>
       </div>
     </div>

@@ -230,6 +230,12 @@ $transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.875em;
 }
 
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--text-color-secondary);
+  margin-top: 0.25rem;
+}
+
 .custom-tag-info {
   font-size: 0.8125rem;
   color: var(--text-color-secondary, #64748b);

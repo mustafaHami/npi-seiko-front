@@ -125,12 +125,13 @@ export class FormService {
       [NpiOrderFormField.PRODUCT_NAME]: new FormControl<string>(
         npiOrder?.productName ?? "",
       ),
-      [NpiOrderFormField.MATERIAL_PURCHASE_PLAN_TIME_IN_DAYS]: new FormControl<
-        number | null
-      >(npiOrder?.materialPurchasePlanTimeInDays ?? null, [
-        Validators.required,
-        Validators.min(0),
-      ]),
+      [NpiOrderFormField.MATERIAL_PURCHASE_ESTIMATED_DATE]:
+        new FormControl<Date | null>(
+          npiOrder?.materialPurchaseEstimatedDate
+            ? new Date(npiOrder.materialPurchaseEstimatedDate)
+            : null,
+          [Validators.required],
+        ),
       [NpiOrderFormField.MATERIAL_RECEIVING_PLAN_TIME_IN_DAYS]: new FormControl<
         number | null
       >(npiOrder?.materialReceivingPlanTimeInDays ?? null, [
@@ -149,18 +150,19 @@ export class FormService {
         Validators.required,
         Validators.min(0),
       ]),
-      [NpiOrderFormField.SHIPPING_PLAN_TIME_IN_DAYS]: new FormControl<
-        number | null
-      >(npiOrder?.shippingPlanTimeInDays ?? null, [
-        Validators.required,
-        Validators.min(0),
-      ]),
-      [NpiOrderFormField.CUSTOMER_APPROVAL_PLAN_TIME_IN_DAYS]: new FormControl<
-        number | null
-      >(npiOrder?.customerApprovalPlanTimeInDays ?? null, [
-        Validators.required,
-        Validators.min(0),
-      ]),
+      [NpiOrderFormField.SHIPPING_ESTIMATED_DATE]: new FormControl<Date | null>(
+        npiOrder?.shippingEstimatedDate
+          ? new Date(npiOrder.shippingEstimatedDate)
+          : null,
+        [Validators.required],
+      ),
+      [NpiOrderFormField.CUSTOMER_APPROVAL_ESTIMATED_DATE]:
+        new FormControl<Date | null>(
+          npiOrder?.customerApprovalEstimatedDate
+            ? new Date(npiOrder.customerApprovalEstimatedDate)
+            : null,
+          [Validators.required],
+        ),
     });
   }
 
